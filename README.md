@@ -40,3 +40,15 @@ Export tips:
 - Phone: Instagram bio says **(425) 518-6966**; Google Maps lists (773) 458-8407. The site uses the Instagram number.
 - Rights to the hero reel footage and the customer photos (or replace with the restaurant's own shots).
 - Google Maps calls it a "Kazakhstani restaurant" and the menu is pan-Central Asian; copy leans Kyrgyz per the owner's posts (🇰🇬).
+
+## Reviews & QR codes
+- Review link (opens Google's "write a review" box):
+  `https://search.google.com/local/writereview?placeid=ChIJS_91cwAVkFQRP54GlcYibS0`
+- QR codes in `assets/qr/` (SVG, print at any size): `google-review.svg`, `google-maps.svg`, `website.svg`
+- Printable table cards: open `/print/review-card.html` → print on Letter, landscape, 100%, background graphics on.
+- Every star rating sends guests to Google. Don't filter unhappy guests to a private form instead —
+  Google's policies forbid "review gating".
+
+## Delivery (DoorDash / Uber Eats)
+Once the restaurant is live on an app, paste its store URL into `js/site-config.js`
+(`doordash:` / `ubereats:`). The matching button appears in the Visit section automatically.

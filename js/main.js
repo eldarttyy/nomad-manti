@@ -1,4 +1,5 @@
 import { MENU, TAG_LABELS } from './menu-data.js';
+import { LINKS } from './site-config.js';
 
 const { gsap, ScrollTrigger, Lenis } = window;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -198,6 +199,51 @@ tabsEl.addEventListener('keydown', (e) => {
   tabs[next].focus();
 });
 renderCategory(MENU[0]);
+
+/* ---------------------------------------------------------
+   Outbound links (DoorDash / Uber Eats show only once configured)
+   --------------------------------------------------------- */
+document.querySelectorAll('[data-link]').forEach((el) => {
+  const url = LINKS[el.dataset.link];
+  if (url) { el.href = url; el.hidden = false; }
+  else el.hidden = true;
+});
+
+/* ---------------------------------------------------------
+   Rate your visit — every rating goes to Google (no filtering)
+   --------------------------------------------------------- */
+const stars = [...document.querySelectorAll('#stars button')];
+const starsHint = document.getElementById('starsHint');
+const HINTS = ['', 'Thank you for telling us — we read every review.', 'Thank you — tell us what we can do better.', 'Thanks! What would make it a five next time?', 'Rakhmat! Tell others what you loved.', 'Rakhmat! Tell others what you loved.'];
+let chosen = 0;
+const paint = (n) => stars.forEach((b, i) => b.classList.toggle('is-on', i < n));
+stars.forEach((b, i) => {
+  b.addEventListener('mouseenter', () => paint(i + 1));
+  b.addEventListener('focus', () => paint(i + 1));
+  b.addEventListener('click', () => {
+    chosen = i + 1;
+    paint(chosen);
+    stars.forEach((s2, j) => s2.setAttribute('aria-pressed', String(j === i)));
+    starsHint.textContent = `${HINTS[chosen]} Opening Google — pick ${chosen} star${chosen > 1 ? 's' : ''} there too.`;
+    window.open(LINKS.googleReview, '_blank', 'noopener');
+  });
+});
+document.getElementById('stars').addEventListener('mouseleave', () => paint(chosen));
+
+document.getElementById('copyReview').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  try {
+    await navigator.clipboard.writeText(LINKS.googleReview);
+    btn.textContent = 'Link copied ✓';
+  } catch {
+    const ta = Object.assign(document.createElement('textarea'), { value: LINKS.googleReview });
+    document.body.appendChild(ta);
+    ta.select();
+    btn.textContent = document.execCommand('copy') ? 'Link copied ✓' : 'Copy failed';
+    ta.remove();
+  }
+  setTimeout(() => { btn.textContent = 'Copy review link'; }, 2200);
+});
 
 /* ---------------------------------------------------------
    Reviews rotator

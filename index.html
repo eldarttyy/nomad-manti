@@ -79,6 +79,7 @@
       <a href="#signature">Signature</a>
       <a href="#menu">Menu</a>
       <a href="#gallery">Gallery</a>
+      <a href="#reviews">Reviews</a>
       <a href="#visit">Visit</a>
     </nav>
     <a href="tel:+14255186966" class="btn btn--ghost nav__cta">Call to order</a>
@@ -94,7 +95,8 @@
       <a href="#signature"><small>02</small>Signature Dishes</a>
       <a href="#menu"><small>03</small>Menu</a>
       <a href="#gallery"><small>04</small>Gallery</a>
-      <a href="#visit"><small>05</small>Location &amp; Hours</a>
+      <a href="#reviews"><small>05</small>Leave a Review</a>
+      <a href="#visit"><small>06</small>Location &amp; Hours</a>
     </nav>
     <p class="drawer__foot">800 NE 65th St, Seattle · <a href="tel:+14255186966">(425) 518-6966</a></p>
   </div>
@@ -237,30 +239,67 @@
     </section>
 
     <!-- ============ REVIEWS ============ -->
-    <section class="voices container" aria-label="Guest reviews">
-      <svg class="voices__mark" aria-hidden="true"><use href="#tunduk"/></svg>
-      <div class="voices__slides" id="voices">
-        <blockquote class="voice is-active">
-          <p>“Friendly staff, great service, and a cozy atmosphere.”</p>
-          <cite>Google review summary</cite>
-        </blockquote>
-        <blockquote class="voice">
-          <p>“The boso lagman was definitely our favorite.”</p>
-          <cite>Shan L. · Google</cite>
-        </blockquote>
-        <blockquote class="voice">
-          <p>“The potatoes are so tasty and perfectly cooked in each dish.”</p>
-          <cite>Google review summary</cite>
-        </blockquote>
+    <section class="reviews" id="reviews" aria-labelledby="reviewsTitle">
+      <div class="reviews__grid container">
+        <div class="reviews__voices">
+          <p class="eyebrow">05 — Guest Book</p>
+          <div class="score">
+            <span class="score__num">4.8</span>
+            <div>
+              <span class="score__stars" aria-hidden="true">★★★★★</span>
+              <a class="score__label" href="https://www.google.com/maps/place/?q=place_id:ChIJS_91cwAVkFQRP54GlcYibS0" target="_blank" rel="noopener" data-link="googleMaps">109 reviews on Google →</a>
+            </div>
+          </div>
+          <div class="voices__slides" id="voices">
+            <blockquote class="voice is-active">
+              <p>“Friendly staff, great service, and a cozy atmosphere.”</p>
+              <cite>Google review summary</cite>
+            </blockquote>
+            <blockquote class="voice">
+              <p>“The boso lagman was definitely our favorite.”</p>
+              <cite>Shan L. · Google</cite>
+            </blockquote>
+            <blockquote class="voice">
+              <p>“The potatoes are so tasty and perfectly cooked in each dish.”</p>
+              <cite>Google review summary</cite>
+            </blockquote>
+          </div>
+          <p class="voices__count"><span id="voiceIndex">1</span> / 3</p>
+        </div>
+
+        <div class="rate-card">
+          <svg class="rate-card__pattern" aria-hidden="true"><rect width="100%" height="100%" fill="url(#shyrdak-gold)"/></svg>
+          <h2 class="rate-card__title" id="reviewsTitle">How was your <em>dastorkon?</em></h2>
+          <p class="rate-card__lede">We're a small family kitchen — every review helps new neighbours find us. It takes 30 seconds.</p>
+
+          <fieldset class="stars" id="stars">
+            <legend class="sr-only">Rate your visit</legend>
+            <button type="button" data-v="1" aria-label="1 star">★</button>
+            <button type="button" data-v="2" aria-label="2 stars">★</button>
+            <button type="button" data-v="3" aria-label="3 stars">★</button>
+            <button type="button" data-v="4" aria-label="4 stars">★</button>
+            <button type="button" data-v="5" aria-label="5 stars">★</button>
+          </fieldset>
+          <p class="stars__hint" id="starsHint" aria-live="polite">Tap a star — we'll open Google so your rating counts.</p>
+
+          <div class="rate-card__actions">
+            <a class="btn btn--solid" href="https://search.google.com/local/writereview?placeid=ChIJS_91cwAVkFQRP54GlcYibS0" target="_blank" rel="noopener" data-link="googleReview">Write a Google review</a>
+            <button class="btn btn--ghost" type="button" id="copyReview">Copy review link</button>
+          </div>
+
+          <div class="rate-card__qr">
+            <img src="assets/qr/google-review.svg" alt="QR code that opens the Nomad Manti Google review form" width="132" height="132">
+            <p><strong>On your phone?</strong> Scan to leave a review straight from your table.</p>
+          </div>
+        </div>
       </div>
-      <p class="voices__count"><span id="voiceIndex">1</span> / 3</p>
     </section>
 
     <!-- ============ VISIT ============ -->
     <section class="visit" id="visit">
       <div class="visit__grid container">
         <div class="visit__info">
-          <p class="eyebrow reveal">05 — Visit</p>
+          <p class="eyebrow reveal">06 — Visit</p>
           <h2 class="display reveal">Pull up <em>a cushion</em></h2>
           <dl class="facts">
             <div class="reveal"><dt>Address</dt><dd>800 NE 65th St<br>Seattle, WA 98115<br><a class="link-arrow" href="https://www.google.com/maps/dir/?api=1&amp;destination=Nomad+Manti+800+NE+65th+St+Seattle+WA" target="_blank" rel="noopener">Get directions</a></dd></div>
@@ -271,6 +310,20 @@
           <ul class="badges reveal">
             <li>100% Halal</li><li>Dine in</li><li>Takeout</li><li>Catering</li><li>Patio seating</li>
           </ul>
+          <div class="order reveal" id="order">
+            <p class="order__label">Order for pickup or delivery</p>
+            <div class="order__buttons">
+              <a class="order-btn order-btn--doordash" data-link="doordash" target="_blank" rel="noopener" hidden>
+                <span class="order-btn__dot"></span>DoorDash
+              </a>
+              <a class="order-btn order-btn--ubereats" data-link="ubereats" target="_blank" rel="noopener" hidden>
+                <span class="order-btn__dot"></span>Uber Eats
+              </a>
+              <a class="order-btn" href="tel:+14255186966" data-link="phone">
+                <span class="order-btn__dot"></span>Call for takeout
+              </a>
+            </div>
+          </div>
         </div>
         <div class="visit__map frame">
           <iframe title="Map showing Nomad Manti at 800 NE 65th St, Seattle" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
@@ -291,7 +344,7 @@
         <h2 class="display">The tea is poured.<br><em>Your seat is waiting.</em></h2>
         <div class="hero__ctas">
           <a href="tel:+14255186966" class="btn btn--solid">Call (425) 518-6966</a>
-          <a href="#menu" class="btn btn--ghost">Browse the menu</a>
+          <a href="#reviews" class="btn btn--ghost">Rate your visit</a>
         </div>
       </div>
     </section>
@@ -307,7 +360,7 @@
       </div>
       <div><h4>Find us</h4><p>800 NE 65th St<br>Seattle, WA 98115</p></div>
       <div><h4>Contact</h4><p><a href="tel:+14255186966">(425) 518-6966</a><br><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">Instagram</a></p></div>
-      <div><h4>Explore</h4><p><a href="#story">Our Story</a><br><a href="#menu">Menu</a><br><a href="#visit">Hours</a></p></div>
+      <div><h4>Explore</h4><p><a href="#story">Our Story</a><br><a href="#menu">Menu</a><br><a href="#visit">Hours</a><br><a href="#reviews">Leave a review</a></p></div>
     </div>
     <p class="footer__legal container">© <span id="year">2026</span> Nomad Manti · Hero footage of the Kyrgyz Tien Shan used with credit to the original creator.</p>
   </footer>
