@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nomad Manti — Kyrgyz &amp; Central Asian Kitchen · Seattle</title>
+  <meta name="description" content="Hand-folded manti, plov, boso lagman and weekend lamb shashlik. A 100% halal Kyrgyz &amp; Central Asian kitchen at 800 NE 65th St, Seattle.">
+  <meta name="theme-color" content="#14100d">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    document.documentElement.classList.add('js');
+    try { if (sessionStorage.getItem('nm-intro') === '1') document.documentElement.classList.add('intro-seen'); } catch (e) {}
+  </script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Shared SVG symbols: tunduk (yurt crown) and the shyrdak ram's-horn motif -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="tunduk" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M40 22 Q50 50 40 78 M50 20 V80 M60 22 Q50 50 60 78" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M22 40 Q50 50 78 40 M20 50 H80 M22 60 Q50 50 78 60" fill="none" stroke="currentColor" stroke-width="2.4"/>
+      </symbol>
+      <symbol id="horn" viewBox="0 0 120 120">
+        <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+          <path id="h1" d="M60 60 C60 38 46 26 34 30 C24 34 26 48 36 46 C42 45 42 38 38 37"/>
+          <use href="#h1" transform="matrix(-1 0 0 1 120 0)"/>
+          <use href="#h1" transform="matrix(1 0 0 -1 0 120)"/>
+          <use href="#h1" transform="matrix(-1 0 0 -1 120 120)"/>
+        </g>
+        <path d="M60 48 L72 60 L60 72 L48 60 Z" fill="currentColor"/>
+      </symbol>
+      <!-- pattern content takes its colour from here, not from where it is used -->
+      <pattern id="shyrdak" width="120" height="120" patternUnits="userSpaceOnUse">
+        <use href="#horn" width="120" height="120" style="color:#a3301f"/>
+      </pattern>
+      <pattern id="shyrdak-gold" width="120" height="120" patternUnits="userSpaceOnUse">
+        <use href="#horn" width="120" height="120" style="color:rgba(233,168,60,.07)"/>
+      </pattern>
+    </defs>
+  </svg>
+
+  <!-- ============ INTRO ============ -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <svg class="intro__sun" viewBox="0 0 200 200">
+      <g class="intro__rays"></g>
+      <use href="#tunduk" x="50" y="50" width="100" height="100" class="intro__tunduk"/>
+    </svg>
+    <p class="intro__word"><span>Nomad</span><span>Manti</span></p>
+    <button class="intro__skip" type="button">Skip intro</button>
+  </div>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ HEADER ============ -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__brand" aria-label="Nomad Manti — home">
+      <svg class="nav__mark"><use href="#tunduk"/></svg>
+      <span class="nav__name">Nomad <em>Manti</em></span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#story">Our Story</a>
+      <a href="#signature">Signature</a>
+      <a href="#menu">Menu</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <a href="tel:+14255186966" class="btn btn--ghost nav__cta">Call to order</a>
+    <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="drawer" id="drawer" hidden>
+    <svg class="drawer__pattern" aria-hidden="true"><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg>
+    <nav aria-label="Mobile">
+      <a href="#story"><small>01</small>Our Story</a>
+      <a href="#signature"><small>02</small>Signature Dishes</a>
+      <a href="#menu"><small>03</small>Menu</a>
+      <a href="#gallery"><small>04</small>Gallery</a>
+      <a href="#visit"><small>05</small>Location &amp; Hours</a>
+    </nav>
+    <p class="drawer__foot">800 NE 65th St, Seattle · <a href="tel:+14255186966">(425) 518-6966</a></p>
+  </div>
+
+  <main id="main">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <video class="hero__video" autoplay muted loop playsinline preload="auto" poster="assets/video/hero-poster.jpg">
+        <source src="assets/video/hero.webm" type="video/webm">
+        <source src="assets/video/hero.mp4" type="video/mp4">
+      </video>
+      <div class="hero__shade"></div>
+
+      <div class="hero__content">
+        <p class="eyebrow hero__eyebrow">Кош келиңиз · Welcome to the yurt</p>
+        <h1 class="hero__title">
+          <span class="line"><span>From the <em>Tien Shan</em></span></span>
+          <span class="line"><span>to Your Table</span></span>
+        </h1>
+        <p class="hero__lede">Hand-folded manti, golden plov and fire-kissed lamb — Kyrgyz &amp; Central Asian cooking, shared the way nomads always have. 100% halal.</p>
+        <div class="hero__ctas">
+          <a href="#menu" class="btn btn--solid">Explore the menu</a>
+          <a href="#visit" class="btn btn--ghost">Find us on NE 65th</a>
+        </div>
+      </div>
+
+      <div class="hero__meta">
+        <div class="rating">
+          <span class="rating__score">4.8</span>
+          <span class="rating__stars" aria-hidden="true">★★★★★</span>
+          <span class="rating__label">109 Google reviews</span>
+        </div>
+        <div class="scroll-cue" aria-hidden="true"><span></span>Scroll</div>
+      </div>
+    </section>
+
+    <!-- ============ STORY ============ -->
+    <section class="story" id="story">
+      <div class="pattern-band" aria-hidden="true"><svg><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg></div>
+
+      <div class="story__grid container">
+        <div class="story__text">
+          <p class="eyebrow reveal">01 — The Dastorkon</p>
+          <h2 class="display reveal">No traveller leaves <em>a yurt</em> hungry.</h2>
+          <p class="reveal">On the high pastures of Kyrgyzstan, a guest is a gift. The moment you arrive, a cloth is spread on the floor — the <strong>dastorkon</strong> — and it fills with bread, tea, dumplings and whatever the herd and the season allow.</p>
+          <p class="reveal">Nomad Manti brings that table to Roosevelt. We're a small, family-run kitchen cooking the food we grew up with. Our little building on NE&nbsp;65th, a former bus stop, now wears the reds, golds and blues of a <strong>shyrdak</strong> felt carpet — and inside, the kitchen is open, the dough is fresh, and every entrée comes with bread and black tea or a cold drink.</p>
+          <a href="#menu" class="link-arrow reveal">See what's on the cloth today</a>
+        </div>
+        <figure class="story__media">
+          <div class="frame frame--tall parallax-wrap">
+            <img src="assets/photos/dastorkon-spread.jpg" alt="A spread of plov, manti, shashlik on flatbread and lagman on a wooden table" loading="lazy" data-parallax>
+          </div>
+          <figure class="story__inset frame">
+            <img src="assets/photos/storefront.jpg" alt="The Nomad Manti building painted in shyrdak-style red, yellow and blue triangles" loading="lazy">
+          </figure>
+          <figcaption>800 NE 65th St — our shyrdak-painted home.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ PILLARS ============ -->
+    <section class="pillars container" aria-label="What we do">
+      <article class="pillar reveal">
+        <div class="frame"><img src="assets/photos/manti.jpg" alt="Six hand-folded lamb manti on a blue plate" loading="lazy"></div>
+        <p class="pillar__num">01</p>
+        <h3>Folded by <em>hand</em></h3>
+        <p>Each manti is rolled, filled with lamb and onion and pinched shut by hand, then steamed until the dough turns silk-thin.</p>
+      </article>
+      <article class="pillar reveal">
+        <div class="frame"><img src="assets/photos/shashlik-grill.jpg" alt="Lamb shashlik skewers searing over an open grill" loading="lazy"></div>
+        <p class="pillar__num">02</p>
+        <h3>Fire &amp; <em>smoke</em></h3>
+        <p>Every Friday and Saturday the charcoal is lit: marinated lamb on flat steel skewers, grilled until juicy with a whisper of smoke.</p>
+      </article>
+      <article class="pillar reveal">
+        <div class="frame"><img src="assets/photos/boso-lagman.jpg" alt="Boso lagman noodles with beef, peppers, cilantro and sesame" loading="lazy"></div>
+        <p class="pillar__num">03</p>
+        <h3>The <em>wok</em> of the Silk Road</h3>
+        <p>Boso lagman — homemade noodles tossed hard with beef, bell peppers, celery, green beans and garlic. Our guests' favourite, by a wide margin.</p>
+      </article>
+    </section>
+
+    <!-- ============ 3D SIGNATURE ============ -->
+    <section class="signature" id="signature">
+      <svg class="signature__pattern" aria-hidden="true"><rect width="100%" height="100%" fill="url(#shyrdak-gold)"/></svg>
+      <div class="signature__inner container">
+        <div class="signature__copy">
+          <p class="eyebrow">02 — The Signature Table</p>
+          <h2 class="display">Turn the plate.<br><em>Look closer.</em></h2>
+          <div class="dish-info" aria-live="polite">
+            <p class="dish-info__count"><span id="dishIndex">01</span> / <span id="dishTotal">04</span></p>
+            <h3 class="dish-info__name" id="dishName">Manti</h3>
+            <p class="dish-info__native" id="dishNative">Манты</p>
+            <p class="dish-info__desc" id="dishDesc"></p>
+          </div>
+          <div class="dish-nav">
+            <button class="round-btn" id="dishPrev" aria-label="Previous dish">←</button>
+            <button class="round-btn" id="dishNext" aria-label="Next dish">→</button>
+            <span class="dish-nav__hint">Drag to rotate</span>
+          </div>
+        </div>
+        <div class="signature__stage">
+          <div class="stage-glow" aria-hidden="true"></div>
+          <canvas id="dishCanvas" aria-label="Interactive 3D model of the selected dish"></canvas>
+          <p class="stage-fallback" hidden>3D preview isn't available on this device.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MENU ============ -->
+    <section class="menu" id="menu">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow reveal">03 — Menu</p>
+          <h2 class="display reveal">What's on <em>the cloth</em></h2>
+          <p class="section-head__note reveal">Open daily 11 AM – 11 PM · dine in, takeout &amp; catering. <strong>Every entrée includes bread and your choice of black tea or a canned drink.</strong> We cook in small batches — favourites can sell out early.</p>
+        </header>
+
+        <div class="menu__tabs" role="tablist" aria-label="Menu categories" id="menuTabs"></div>
+        <div class="menu__panel" id="menuPanel" role="tabpanel"></div>
+      </div>
+    </section>
+
+    <!-- ============ GALLERY ============ -->
+    <section class="gallery" id="gallery">
+      <div class="gallery__head container">
+        <p class="eyebrow">04 — Through the Lens</p>
+        <h2 class="display">A table <em>worth sharing</em></h2>
+      </div>
+      <div class="gallery__track" id="galleryTrack">
+        <figure class="g g--w"><img src="assets/photos/dastorkon-spread.jpg" alt="Full table of plov, manti, shashlik and lagman" loading="lazy"><figcaption>The full dastorkon</figcaption></figure>
+        <figure class="g"><img src="assets/photos/manti-chili.jpg" alt="Manti around a bowl of chili sauce" loading="lazy"><figcaption>Manti &amp; house chili</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/lagman-for-two.jpg" alt="Two plates of lagman with tea" loading="lazy"><figcaption>Lagman for two</figcaption></figure>
+        <figure class="g"><img src="assets/photos/shashlik-grill.jpg" alt="Shashlik on the grill" loading="lazy"><figcaption>Weekend shashlik</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/plov-achichuk.jpg" alt="Plov with boiled egg and achichuk tomato salad" loading="lazy"><figcaption>Plov &amp; achichuk</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/storefront-sunny.jpg" alt="The colourful storefront on a sunny day" loading="lazy"><figcaption>NE 65th St</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/tom-yum.jpg" alt="Tom yum soup with a side of rice" loading="lazy"><figcaption>Tom yum &amp; rice</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- ============ REVIEWS ============ -->
+    <section class="voices container" aria-label="Guest reviews">
+      <svg class="voices__mark" aria-hidden="true"><use href="#tunduk"/></svg>
+      <div class="voices__slides" id="voices">
+        <blockquote class="voice is-active">
+          <p>“Friendly staff, great service, and a cozy atmosphere.”</p>
+          <cite>Google review summary</cite>
+        </blockquote>
+        <blockquote class="voice">
+          <p>“The boso lagman was definitely our favorite.”</p>
+          <cite>Shan L. · Google</cite>
+        </blockquote>
+        <blockquote class="voice">
+          <p>“The potatoes are so tasty and perfectly cooked in each dish.”</p>
+          <cite>Google review summary</cite>
+        </blockquote>
+      </div>
+      <p class="voices__count"><span id="voiceIndex">1</span> / 3</p>
+    </section>
+
+    <!-- ============ VISIT ============ -->
+    <section class="visit" id="visit">
+      <div class="visit__grid container">
+        <div class="visit__info">
+          <p class="eyebrow reveal">05 — Visit</p>
+          <h2 class="display reveal">Pull up <em>a cushion</em></h2>
+          <dl class="facts">
+            <div class="reveal"><dt>Address</dt><dd>800 NE 65th St<br>Seattle, WA 98115<br><a class="link-arrow" href="https://www.google.com/maps/dir/?api=1&amp;destination=Nomad+Manti+800+NE+65th+St+Seattle+WA" target="_blank" rel="noopener">Get directions</a></dd></div>
+            <div class="reveal"><dt>Hours</dt><dd>Open daily<br>11 AM – 11 PM</dd></div>
+            <div class="reveal"><dt>Call</dt><dd><a href="tel:+14255186966">(425) 518-6966</a></dd></div>
+            <div class="reveal"><dt>Follow</dt><dd><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">@nomad.manti</a></dd></div>
+          </dl>
+          <ul class="badges reveal">
+            <li>100% Halal</li><li>Dine in</li><li>Takeout</li><li>Catering</li><li>Patio seating</li>
+          </ul>
+        </div>
+        <div class="visit__map frame">
+          <iframe title="Map showing Nomad Manti at 800 NE 65th St, Seattle" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q=Nomad%20Manti%2C%20800%20NE%2065th%20St%2C%20Seattle&z=16&output=embed"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FINAL CTA ============ -->
+    <section class="final">
+      <video class="final__video" muted loop playsinline preload="none" poster="assets/video/hero-poster.jpg" data-lazy-video>
+        <source src="assets/video/hero.webm" type="video/webm">
+        <source src="assets/video/hero.mp4" type="video/mp4">
+      </video>
+      <div class="final__shade"></div>
+      <div class="final__content container">
+        <svg class="final__mark" aria-hidden="true"><use href="#tunduk"/></svg>
+        <h2 class="display">The tea is poured.<br><em>Your seat is waiting.</em></h2>
+        <div class="hero__ctas">
+          <a href="tel:+14255186966" class="btn btn--solid">Call (425) 518-6966</a>
+          <a href="#menu" class="btn btn--ghost">Browse the menu</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="pattern-band pattern-band--thin" aria-hidden="true"><svg><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg></div>
+    <div class="footer__grid container">
+      <div>
+        <a href="#top" class="nav__brand"><svg class="nav__mark"><use href="#tunduk"/></svg><span class="nav__name">Nomad <em>Manti</em></span></a>
+        <p class="footer__tag">Family-run Kyrgyz &amp; Central Asian kitchen.<br>Ак жол — may your road be white.</p>
+      </div>
+      <div><h4>Find us</h4><p>800 NE 65th St<br>Seattle, WA 98115</p></div>
+      <div><h4>Contact</h4><p><a href="tel:+14255186966">(425) 518-6966</a><br><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">Instagram</a></p></div>
+      <div><h4>Explore</h4><p><a href="#story">Our Story</a><br><a href="#menu">Menu</a><br><a href="#visit">Hours</a></p></div>
+    </div>
+    <p class="footer__legal container">© <span id="year">2026</span> Nomad Manti · Hero footage of the Kyrgyz Tien Shan used with credit to the original creator.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
