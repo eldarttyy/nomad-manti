@@ -259,6 +259,20 @@ setInterval(() => {
 }, 5500);
 
 /* ---------------------------------------------------------
+   Hero video: keep it running (browsers may pause muted video
+   on tab switches, power saving or a slow first load)
+   --------------------------------------------------------- */
+const heroVideo = document.querySelector('[data-keep-playing]');
+const playHero = () => { if (heroVideo.paused && !document.hidden) heroVideo.play().catch(() => {}); };
+heroVideo.muted = true;
+heroVideo.addEventListener('pause', () => setTimeout(playHero, 300));
+heroVideo.addEventListener('ended', () => { heroVideo.currentTime = 0; playHero(); });
+heroVideo.addEventListener('canplay', playHero);
+document.addEventListener('visibilitychange', playHero);
+['pointerdown', 'touchstart', 'scroll'].forEach((e) => window.addEventListener(e, playHero, { once: true, passive: true }));
+setInterval(playHero, 4000);
+
+/* ---------------------------------------------------------
    Lazy final video
    --------------------------------------------------------- */
 const lazyVideo = document.querySelector('[data-lazy-video]');
