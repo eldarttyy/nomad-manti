@@ -3,17 +3,42 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nomad Manti — Kyrgyz &amp; Central Asian Kitchen · Seattle</title>
-  <meta name="description" content="Hand-folded manti, plov, boso lagman and weekend lamb shashlik. A 100% halal Kyrgyz &amp; Central Asian kitchen at 800 NE 65th St, Seattle.">
+  <title data-i18n="meta.title">Nomad Manti — Kyrgyz &amp; Central Asian Kitchen · Seattle</title>
+  <meta name="description" data-i18n-attr="content:meta.desc" content="Hand-folded manti, plov, boso lagman and weekend lamb shashlik. A 100% halal Kyrgyz &amp; Central Asian kitchen at 800 NE 65th St, Seattle.">
   <meta name="theme-color" content="#14100d">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" hreflang="en" href="https://eldarttyy.github.io/nomad-manti/?lang=en">
+  <link rel="alternate" hreflang="ru" href="https://eldarttyy.github.io/nomad-manti/?lang=ru">
+  <link rel="alternate" hreflang="ky" href="https://eldarttyy.github.io/nomad-manti/?lang=ky">
+  <link rel="alternate" hreflang="es" href="https://eldarttyy.github.io/nomad-manti/?lang=es">
+  <link rel="alternate" hreflang="x-default" href="https://eldarttyy.github.io/nomad-manti/">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Jost has no Kyrgyz Ң Ө Ү: load just those letters from Montserrat as its fallback -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&text=%D2%A2%D2%A3%D3%A8%D3%A9%D2%AE%D2%AF&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script>
     document.documentElement.classList.add('js');
+    // Pick the language before first paint: ?lang= → saved choice → browser languages → English
+    (function () {
+      var langs = ['en', 'ru', 'ky', 'es'], source = 'en', l, d = document.documentElement;
+      try { l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('nm-lang'); } catch (e) {}
+      if (langs.indexOf(l) < 0) {
+        l = source;
+        var prefs = navigator.languages || [navigator.language];
+        for (var i = 0; i < prefs.length; i++) {
+          var code = String(prefs[i]).toLowerCase().split('-')[0];
+          if (langs.indexOf(code) > -1) { l = code; break; }
+        }
+      }
+      d.lang = l;
+      if (l !== source) {
+        d.classList.add('i18n-wait');
+        setTimeout(function () { d.classList.remove('i18n-wait'); }, 2500);
+      }
+    })();
     try { if (sessionStorage.getItem('nm-intro') === '1') document.documentElement.classList.add('intro-seen'); } catch (e) {}
   </script>
 
@@ -55,38 +80,42 @@
       <use href="#tunduk" x="50" y="50" width="100" height="100" class="intro__tunduk"/>
     </svg>
     <p class="intro__word"><span>Nomad</span><span>Manti</span></p>
-    <button class="intro__skip" type="button">Skip intro</button>
+    <button class="intro__skip" type="button" data-i18n="intro.skip">Skip intro</button>
   </div>
 
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <!-- ============ HEADER ============ -->
   <header class="nav" id="nav">
-    <a href="#top" class="nav__brand" aria-label="Nomad Manti — home">
+    <a href="#top" class="nav__brand" aria-label="Nomad Manti — home" data-i18n-attr="aria-label:nav.home">
       <svg class="nav__mark"><use href="#tunduk"/></svg>
       <span class="nav__name">Nomad <em>Manti</em></span>
     </a>
-    <nav class="nav__links" aria-label="Primary">
-      <a href="#story">Our Story</a>
-      <a href="#menu">Menu</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#reviews">Reviews</a>
-      <a href="#visit">Visit</a>
+    <nav class="nav__links" aria-label="Primary" data-i18n-attr="aria-label:nav.primary">
+      <a href="#story" data-i18n="nav.story">Our Story</a>
+      <a href="#menu" data-i18n="nav.menu">Menu</a>
+      <a href="#gallery" data-i18n="nav.gallery">Gallery</a>
+      <a href="#reviews" data-i18n="nav.reviews">Reviews</a>
+      <a href="#visit" data-i18n="nav.visit">Visit</a>
     </nav>
-    <a href="tel:+14255186966" class="btn btn--ghost nav__cta">Call to order</a>
-    <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+    <label class="lang" data-lang-picker>
+      <span class="lang__code" aria-hidden="true">EN</span>
+      <select aria-label="Language" data-i18n-attr="aria-label:lang.label"></select>
+    </label>
+    <a href="tel:+14255186966" class="btn btn--ghost nav__cta" data-i18n="nav.cta">Call to order</a>
+    <button class="nav__burger" id="burger" aria-label="Open menu" data-i18n-attr="aria-label:nav.open" aria-expanded="false" aria-controls="drawer">
       <span></span><span></span>
     </button>
   </header>
 
   <div class="drawer" id="drawer" hidden>
     <svg class="drawer__pattern" aria-hidden="true"><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg>
-    <nav aria-label="Mobile">
-      <a href="#story"><small>01</small>Our Story</a>
-      <a href="#menu"><small>02</small>Menu</a>
-      <a href="#gallery"><small>03</small>Gallery</a>
-      <a href="#reviews"><small>04</small>Leave a Review</a>
-      <a href="#visit"><small>05</small>Location &amp; Hours</a>
+    <nav aria-label="Mobile" data-i18n-attr="aria-label:nav.mobile">
+      <a href="#story"><small>01</small><span data-i18n="nav.story">Our Story</span></a>
+      <a href="#menu"><small>02</small><span data-i18n="nav.menu">Menu</span></a>
+      <a href="#gallery"><small>03</small><span data-i18n="nav.gallery">Gallery</span></a>
+      <a href="#reviews"><small>04</small><span data-i18n="drawer.reviews">Leave a Review</span></a>
+      <a href="#visit"><small>05</small><span data-i18n="drawer.visit">Location &amp; Hours</span></a>
     </nav>
     <p class="drawer__foot">800 NE 65th St, Seattle · <a href="tel:+14255186966">(425) 518-6966</a></p>
   </div>
@@ -104,15 +133,15 @@
       <div class="hero__shade"></div>
 
       <div class="hero__content">
-        <p class="eyebrow hero__eyebrow">Кош келиңиз · Welcome to the yurt</p>
+        <p class="eyebrow hero__eyebrow" data-i18n="hero.eyebrow">Кош келиңиз · Welcome to the yurt</p>
         <h1 class="hero__title">
-          <span class="line"><span>From the <em>Tien Shan</em></span></span>
-          <span class="line"><span>to Your Table</span></span>
+          <span class="line"><span data-i18n="hero.line1">From the <em>Tien Shan</em></span></span>
+          <span class="line"><span data-i18n="hero.line2">to Your Table</span></span>
         </h1>
-        <p class="hero__lede">Hand-folded manti, golden plov and fire-kissed lamb — Kyrgyz &amp; Central Asian cooking, shared the way nomads always have. 100% halal.</p>
+        <p class="hero__lede" data-i18n="hero.lede">Hand-folded manti, golden plov and fire-kissed lamb — Kyrgyz &amp; Central Asian cooking, shared the way nomads always have. 100% halal.</p>
         <div class="hero__ctas">
-          <a href="#menu" class="btn btn--solid">Explore the menu</a>
-          <a href="#visit" class="btn btn--ghost">Find us on NE 65th</a>
+          <a href="#menu" class="btn btn--solid" data-i18n="hero.cta.menu">Explore the menu</a>
+          <a href="#visit" class="btn btn--ghost" data-i18n="hero.cta.visit">Find us on NE 65th</a>
         </div>
       </div>
 
@@ -120,9 +149,9 @@
         <div class="rating">
           <span class="rating__score">4.8</span>
           <span class="rating__stars" aria-hidden="true">★★★★★</span>
-          <span class="rating__label">109 Google reviews</span>
+          <span class="rating__label" data-i18n="hero.rating">109 Google reviews</span>
         </div>
-        <div class="scroll-cue" aria-hidden="true"><span></span>Scroll</div>
+        <div class="scroll-cue" aria-hidden="true" data-i18n="hero.scroll"><span></span>Scroll</div>
       </div>
     </section>
 
@@ -132,43 +161,43 @@
 
       <div class="story__grid container">
         <div class="story__text">
-          <p class="eyebrow reveal">01 — The Dastorkon</p>
-          <h2 class="display reveal">No traveller leaves <em>a yurt</em> hungry.</h2>
-          <p class="reveal">On the high pastures of Kyrgyzstan, a guest is a gift. The moment you arrive, a cloth is spread on the floor — the <strong>dastorkon</strong> — and it fills with bread, tea, dumplings and whatever the herd and the season allow.</p>
-          <p class="reveal">Nomad Manti brings that table to Roosevelt. We're a small, family-run kitchen cooking the food we grew up with. Our little building on NE&nbsp;65th, a former bus stop, now wears the reds, golds and blues of a <strong>shyrdak</strong> felt carpet — and inside, the kitchen is open, the dough is fresh, and every entrée comes with bread and black tea or a cold drink.</p>
-          <a href="#menu" class="link-arrow reveal">See what's on the cloth today</a>
+          <p class="eyebrow reveal" data-i18n="story.eyebrow">01 — The Dastorkon</p>
+          <h2 class="display reveal" data-i18n="story.title">No traveller leaves <em>a yurt</em> hungry.</h2>
+          <p class="reveal" data-i18n="story.p1">On the high pastures of Kyrgyzstan, a guest is a gift. The moment you arrive, a cloth is spread on the floor — the <strong>dastorkon</strong> — and it fills with bread, tea, dumplings and whatever the herd and the season allow.</p>
+          <p class="reveal" data-i18n="story.p2">Nomad Manti brings that table to Roosevelt. We're a small, family-run kitchen cooking the food we grew up with. Our little building on NE&nbsp;65th, a former bus stop, now wears the reds, golds and blues of a <strong>shyrdak</strong> felt carpet — and inside, the kitchen is open, the dough is fresh, and every entrée comes with bread and black tea or a cold drink.</p>
+          <a href="#menu" class="link-arrow reveal" data-i18n="story.link">See what's on the cloth today</a>
         </div>
         <figure class="story__media">
           <div class="frame frame--tall parallax-wrap">
-            <img src="assets/photos/dastorkon-spread.jpg" alt="A spread of plov, manti, shashlik on flatbread and lagman on a wooden table" loading="lazy" data-parallax>
+            <img src="assets/photos/dastorkon-spread.jpg" alt="A spread of plov, manti, shashlik on flatbread and lagman on a wooden table" data-i18n-attr="alt:alt.spread" loading="lazy" data-parallax>
           </div>
           <figure class="story__inset frame">
-            <img src="assets/photos/storefront.jpg" alt="The Nomad Manti building painted in shyrdak-style red, yellow and blue triangles" loading="lazy">
+            <img src="assets/photos/storefront.jpg" data-i18n-attr="alt:alt.storefront" alt="The Nomad Manti building painted in shyrdak-style red, yellow and blue triangles" loading="lazy">
           </figure>
-          <figcaption>800 NE 65th St — our shyrdak-painted home.</figcaption>
+          <figcaption data-i18n="story.caption">800 NE 65th St — our shyrdak-painted home.</figcaption>
         </figure>
       </div>
     </section>
 
     <!-- ============ PILLARS ============ -->
-    <section class="pillars container" aria-label="What we do">
+    <section class="pillars container" aria-label="What we do" data-i18n-attr="aria-label:pillars.label">
       <article class="pillar reveal">
-        <div class="frame"><img src="assets/photos/manti.jpg" alt="Six hand-folded lamb manti on a blue plate" loading="lazy"></div>
+        <div class="frame"><img src="assets/photos/manti.jpg" alt="Six hand-folded lamb manti on a blue plate" data-i18n-attr="alt:alt.manti" loading="lazy"></div>
         <p class="pillar__num">01</p>
-        <h3>Folded by <em>hand</em></h3>
-        <p>Each manti is rolled, filled with lamb and onion and pinched shut by hand, then steamed until the dough turns silk-thin.</p>
+        <h3 data-i18n="pillar1.title">Folded by <em>hand</em></h3>
+        <p data-i18n="pillar1.text">Each manti is rolled, filled with lamb and onion and pinched shut by hand, then steamed until the dough turns silk-thin.</p>
       </article>
       <article class="pillar reveal">
-        <div class="frame"><img src="assets/photos/shashlik-grill.jpg" alt="Lamb shashlik skewers searing over an open grill" loading="lazy"></div>
+        <div class="frame"><img src="assets/photos/shashlik-grill.jpg" alt="Lamb shashlik skewers searing over an open grill" data-i18n-attr="alt:alt.grill" loading="lazy"></div>
         <p class="pillar__num">02</p>
-        <h3>Fire &amp; <em>smoke</em></h3>
-        <p>Every Friday and Saturday the charcoal is lit: marinated lamb on flat steel skewers, grilled until juicy with a whisper of smoke.</p>
+        <h3 data-i18n="pillar2.title">Fire &amp; <em>smoke</em></h3>
+        <p data-i18n="pillar2.text">Every Friday and Saturday the charcoal is lit: marinated lamb on flat steel skewers, grilled until juicy with a whisper of smoke.</p>
       </article>
       <article class="pillar reveal">
-        <div class="frame"><img src="assets/photos/boso-lagman.jpg" alt="Boso lagman noodles with beef, peppers, cilantro and sesame" loading="lazy"></div>
+        <div class="frame"><img src="assets/photos/boso-lagman.jpg" alt="Boso lagman noodles with beef, peppers, cilantro and sesame" data-i18n-attr="alt:alt.lagman" loading="lazy"></div>
         <p class="pillar__num">03</p>
-        <h3>The <em>wok</em> of the Silk Road</h3>
-        <p>Boso lagman — homemade noodles tossed hard with beef, bell peppers, celery, green beans and garlic. Our guests' favourite, by a wide margin.</p>
+        <h3 data-i18n="pillar3.title">The <em>wok</em> of the Silk Road</h3>
+        <p data-i18n="pillar3.text">Boso lagman — homemade noodles tossed hard with beef, bell peppers, celery, green beans and garlic. Our guests' favourite, by a wide margin.</p>
       </article>
     </section>
 
@@ -176,12 +205,12 @@
     <section class="menu" id="menu">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal">02 — Menu</p>
-          <h2 class="display reveal">What's on <em>the cloth</em></h2>
-          <p class="section-head__note reveal">Open daily 11 AM – 11 PM · dine in, takeout &amp; catering. <strong>Every entrée includes bread and your choice of black tea or a canned drink.</strong> We cook in small batches — favourites can sell out early.</p>
+          <p class="eyebrow reveal" data-i18n="menu.eyebrow">02 — Menu</p>
+          <h2 class="display reveal" data-i18n="menu.title">What's on <em>the cloth</em></h2>
+          <p class="section-head__note reveal" data-i18n="menu.note">Open daily 11 AM – 11 PM · dine in, takeout &amp; catering. <strong>Every entrée includes bread and your choice of black tea or a canned drink.</strong> We cook in small batches — favourites can sell out early.</p>
         </header>
 
-        <div class="menu__tabs" role="tablist" aria-label="Menu categories" id="menuTabs"></div>
+        <div class="menu__tabs" role="tablist" aria-label="Menu categories" data-i18n-attr="aria-label:menu.tabs" id="menuTabs"></div>
         <div class="menu__panel" id="menuPanel" role="tabpanel"></div>
       </div>
     </section>
@@ -189,17 +218,17 @@
     <!-- ============ GALLERY ============ -->
     <section class="gallery" id="gallery">
       <div class="gallery__head container">
-        <p class="eyebrow">03 — Through the Lens</p>
-        <h2 class="display">A table <em>worth sharing</em></h2>
+        <p class="eyebrow" data-i18n="gallery.eyebrow">03 — Through the Lens</p>
+        <h2 class="display" data-i18n="gallery.title">A table <em>worth sharing</em></h2>
       </div>
       <div class="gallery__track" id="galleryTrack">
-        <figure class="g g--w"><img src="assets/photos/dastorkon-spread.jpg" alt="Full table of plov, manti, shashlik and lagman" loading="lazy"><figcaption>The full dastorkon</figcaption></figure>
-        <figure class="g"><img src="assets/photos/manti-chili.jpg" alt="Manti around a bowl of chili sauce" loading="lazy"><figcaption>Manti &amp; house chili</figcaption></figure>
-        <figure class="g g--w"><img src="assets/photos/lagman-for-two.jpg" alt="Two plates of lagman with tea" loading="lazy"><figcaption>Lagman for two</figcaption></figure>
-        <figure class="g"><img src="assets/photos/shashlik-grill.jpg" alt="Shashlik on the grill" loading="lazy"><figcaption>Weekend shashlik</figcaption></figure>
-        <figure class="g g--w"><img src="assets/photos/plov-achichuk.jpg" alt="Plov with boiled egg and achichuk tomato salad" loading="lazy"><figcaption>Plov &amp; achichuk</figcaption></figure>
-        <figure class="g g--w"><img src="assets/photos/storefront-sunny.jpg" alt="The colourful storefront on a sunny day" loading="lazy"><figcaption>NE 65th St</figcaption></figure>
-        <figure class="g g--w"><img src="assets/photos/tom-yum.jpg" alt="Tom yum soup with a side of rice" loading="lazy"><figcaption>Tom yum &amp; rice</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/dastorkon-spread.jpg" alt="Full table of plov, manti, shashlik and lagman" data-i18n-attr="alt:gallery.alt1" loading="lazy"><figcaption data-i18n="gallery.cap1">The full dastorkon</figcaption></figure>
+        <figure class="g"><img src="assets/photos/manti-chili.jpg" alt="Manti around a bowl of chili sauce" data-i18n-attr="alt:gallery.alt2" loading="lazy"><figcaption data-i18n="gallery.cap2">Manti &amp; house chili</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/lagman-for-two.jpg" alt="Two plates of lagman with tea" data-i18n-attr="alt:gallery.alt3" loading="lazy"><figcaption data-i18n="gallery.cap3">Lagman for two</figcaption></figure>
+        <figure class="g"><img src="assets/photos/shashlik-grill.jpg" alt="Shashlik on the grill" data-i18n-attr="alt:gallery.alt4" loading="lazy"><figcaption data-i18n="gallery.cap4">Weekend shashlik</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/plov-achichuk.jpg" alt="Plov with boiled egg and achichuk tomato salad" data-i18n-attr="alt:gallery.alt5" loading="lazy"><figcaption data-i18n="gallery.cap5">Plov &amp; achichuk</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/storefront-sunny.jpg" alt="The colourful storefront on a sunny day" data-i18n-attr="alt:gallery.alt6" loading="lazy"><figcaption data-i18n="gallery.cap6">NE 65th St</figcaption></figure>
+        <figure class="g g--w"><img src="assets/photos/tom-yum.jpg" alt="Tom yum soup with a side of rice" data-i18n-attr="alt:gallery.alt7" loading="lazy"><figcaption data-i18n="gallery.cap7">Tom yum &amp; rice</figcaption></figure>
       </div>
     </section>
 
@@ -207,26 +236,26 @@
     <section class="reviews" id="reviews" aria-labelledby="reviewsTitle">
       <div class="reviews__grid container">
         <div class="reviews__voices">
-          <p class="eyebrow">04 — Guest Book</p>
+          <p class="eyebrow" data-i18n="reviews.eyebrow">04 — Guest Book</p>
           <div class="score">
             <span class="score__num">4.8</span>
             <div>
               <span class="score__stars" aria-hidden="true">★★★★★</span>
-              <a class="score__label" href="https://www.google.com/maps/place/?q=place_id:ChIJS_91cwAVkFQRP54GlcYibS0" target="_blank" rel="noopener" data-link="googleMaps">109 reviews on Google →</a>
+              <a class="score__label" href="https://www.google.com/maps/place/?q=place_id:ChIJS_91cwAVkFQRP54GlcYibS0" target="_blank" rel="noopener" data-link="googleMaps" data-i18n="reviews.score">109 reviews on Google →</a>
             </div>
           </div>
           <div class="voices__slides" id="voices">
             <blockquote class="voice is-active">
-              <p>“Friendly staff, great service, and a cozy atmosphere.”</p>
-              <cite>Google review summary</cite>
+              <p data-i18n="reviews.q1">“Friendly staff, great service, and a cozy atmosphere.”</p>
+              <cite data-i18n="reviews.summary">Google review summary</cite>
             </blockquote>
             <blockquote class="voice">
-              <p>“The boso lagman was definitely our favorite.”</p>
+              <p data-i18n="reviews.q2">“The boso lagman was definitely our favorite.”</p>
               <cite>Shan L. · Google</cite>
             </blockquote>
             <blockquote class="voice">
-              <p>“The potatoes are so tasty and perfectly cooked in each dish.”</p>
-              <cite>Google review summary</cite>
+              <p data-i18n="reviews.q3">“The potatoes are so tasty and perfectly cooked in each dish.”</p>
+              <cite data-i18n="reviews.summary">Google review summary</cite>
             </blockquote>
           </div>
           <p class="voices__count"><span id="voiceIndex">1</span> / 3</p>
@@ -234,27 +263,27 @@
 
         <div class="rate-card">
           <svg class="rate-card__pattern" aria-hidden="true"><rect width="100%" height="100%" fill="url(#shyrdak-gold)"/></svg>
-          <h2 class="rate-card__title" id="reviewsTitle">How was your <em>dastorkon?</em></h2>
-          <p class="rate-card__lede">We're a small family kitchen — every review helps new neighbours find us. It takes 30 seconds.</p>
+          <h2 class="rate-card__title" id="reviewsTitle" data-i18n="rate.title">How was your <em>dastorkon?</em></h2>
+          <p class="rate-card__lede" data-i18n="rate.lede">We're a small family kitchen — every review helps new neighbours find us. It takes 30 seconds.</p>
 
           <fieldset class="stars" id="stars">
-            <legend class="sr-only">Rate your visit</legend>
-            <button type="button" data-v="1" aria-label="1 star">★</button>
-            <button type="button" data-v="2" aria-label="2 stars">★</button>
-            <button type="button" data-v="3" aria-label="3 stars">★</button>
-            <button type="button" data-v="4" aria-label="4 stars">★</button>
-            <button type="button" data-v="5" aria-label="5 stars">★</button>
+            <legend class="sr-only" data-i18n="rate.legend">Rate your visit</legend>
+            <button type="button" data-v="1" aria-label="1 star" data-i18n-attr="aria-label:rate.star1">★</button>
+            <button type="button" data-v="2" aria-label="2 stars" data-i18n-attr="aria-label:rate.star2">★</button>
+            <button type="button" data-v="3" aria-label="3 stars" data-i18n-attr="aria-label:rate.star3">★</button>
+            <button type="button" data-v="4" aria-label="4 stars" data-i18n-attr="aria-label:rate.star4">★</button>
+            <button type="button" data-v="5" aria-label="5 stars" data-i18n-attr="aria-label:rate.star5">★</button>
           </fieldset>
-          <p class="stars__hint" id="starsHint" aria-live="polite">Tap a star — we'll open Google so your rating counts.</p>
+          <p class="stars__hint" id="starsHint" aria-live="polite" data-i18n="rate.hint">Tap a star — we'll open Google so your rating counts.</p>
 
           <div class="rate-card__actions">
-            <a class="btn btn--solid" href="https://search.google.com/local/writereview?placeid=ChIJS_91cwAVkFQRP54GlcYibS0" target="_blank" rel="noopener" data-link="googleReview">Write a Google review</a>
-            <button class="btn btn--ghost" type="button" id="copyReview">Copy review link</button>
+            <a class="btn btn--solid" href="https://search.google.com/local/writereview?placeid=ChIJS_91cwAVkFQRP54GlcYibS0" target="_blank" rel="noopener" data-link="googleReview" data-i18n="rate.write">Write a Google review</a>
+            <button class="btn btn--ghost" type="button" id="copyReview" data-i18n="rate.copy">Copy review link</button>
           </div>
 
           <div class="rate-card__qr">
-            <img src="assets/qr/google-review.svg" alt="QR code that opens the Nomad Manti Google review form" width="132" height="132">
-            <p><strong>On your phone?</strong> Scan to leave a review straight from your table.</p>
+            <img src="assets/qr/google-review.svg" alt="QR code that opens the Nomad Manti Google review form" data-i18n-attr="alt:rate.qrAlt" width="132" height="132">
+            <p data-i18n="rate.qr"><strong>On your phone?</strong> Scan to leave a review straight from your table.</p>
           </div>
         </div>
       </div>
@@ -264,19 +293,19 @@
     <section class="visit" id="visit">
       <div class="visit__grid container">
         <div class="visit__info">
-          <p class="eyebrow reveal">05 — Visit</p>
-          <h2 class="display reveal">Pull up <em>a cushion</em></h2>
+          <p class="eyebrow reveal" data-i18n="visit.eyebrow">05 — Visit</p>
+          <h2 class="display reveal" data-i18n="visit.title">Pull up <em>a cushion</em></h2>
           <dl class="facts">
-            <div class="reveal"><dt>Address</dt><dd>800 NE 65th St<br>Seattle, WA 98115<br><a class="link-arrow" href="https://www.google.com/maps/dir/?api=1&amp;destination=Nomad+Manti+800+NE+65th+St+Seattle+WA" target="_blank" rel="noopener">Get directions</a></dd></div>
-            <div class="reveal"><dt>Hours</dt><dd>Open daily<br>11 AM – 11 PM</dd></div>
-            <div class="reveal"><dt>Call</dt><dd><a href="tel:+14255186966">(425) 518-6966</a></dd></div>
-            <div class="reveal"><dt>Follow</dt><dd><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">@nomad.manti</a></dd></div>
+            <div class="reveal"><dt data-i18n="visit.address">Address</dt><dd>800 NE 65th St<br>Seattle, WA 98115<br><a class="link-arrow" href="https://www.google.com/maps/dir/?api=1&amp;destination=Nomad+Manti+800+NE+65th+St+Seattle+WA" target="_blank" rel="noopener" data-i18n="visit.directions">Get directions</a></dd></div>
+            <div class="reveal"><dt data-i18n="visit.hours">Hours</dt><dd data-i18n="visit.hoursValue">Open daily<br>11 AM – 11 PM</dd></div>
+            <div class="reveal"><dt data-i18n="visit.call">Call</dt><dd><a href="tel:+14255186966">(425) 518-6966</a></dd></div>
+            <div class="reveal"><dt data-i18n="visit.follow">Follow</dt><dd><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">@nomad.manti</a></dd></div>
           </dl>
           <ul class="badges reveal">
-            <li>100% Halal</li><li>Dine in</li><li>Takeout</li><li>Catering</li><li>Patio seating</li>
+            <li data-i18n="badge.halal">100% Halal</li><li data-i18n="badge.dinein">Dine in</li><li data-i18n="badge.takeout">Takeout</li><li data-i18n="badge.catering">Catering</li><li data-i18n="badge.patio">Patio seating</li>
           </ul>
           <div class="order reveal" id="order">
-            <p class="order__label">Order for pickup or delivery</p>
+            <p class="order__label" data-i18n="order.label">Order for pickup or delivery</p>
             <div class="order__buttons">
               <a class="order-btn order-btn--doordash" data-link="doordash" target="_blank" rel="noopener" hidden>
                 <span class="order-btn__dot"></span>DoorDash
@@ -285,13 +314,13 @@
                 <span class="order-btn__dot"></span>Uber Eats
               </a>
               <a class="order-btn" href="tel:+14255186966" data-link="phone">
-                <span class="order-btn__dot"></span>Call for takeout
+                <span class="order-btn__dot"></span><span data-i18n="order.call">Call for takeout</span>
               </a>
             </div>
           </div>
         </div>
         <div class="visit__map frame">
-          <iframe title="Map showing Nomad Manti at 800 NE 65th St, Seattle" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          <iframe data-i18n-attr="title:visit.map" title="Map showing Nomad Manti at 800 NE 65th St, Seattle" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
             src="https://maps.google.com/maps?q=Nomad%20Manti%2C%20800%20NE%2065th%20St%2C%20Seattle&z=16&output=embed"></iframe>
         </div>
       </div>
@@ -308,10 +337,10 @@
       <div class="final__shade"></div>
       <div class="final__content container">
         <svg class="final__mark" aria-hidden="true"><use href="#tunduk"/></svg>
-        <h2 class="display">The tea is poured.<br><em>Your seat is waiting.</em></h2>
+        <h2 class="display" data-i18n="final.title">The tea is poured.<br><em>Your seat is waiting.</em></h2>
         <div class="hero__ctas">
-          <a href="tel:+14255186966" class="btn btn--solid">Call (425) 518-6966</a>
-          <a href="#reviews" class="btn btn--ghost">Rate your visit</a>
+          <a href="tel:+14255186966" class="btn btn--solid" data-i18n="final.call">Call (425) 518-6966</a>
+          <a href="#reviews" class="btn btn--ghost" data-i18n="final.rate">Rate your visit</a>
         </div>
       </div>
     </section>
@@ -323,13 +352,13 @@
     <div class="footer__grid container">
       <div>
         <a href="#top" class="nav__brand"><svg class="nav__mark"><use href="#tunduk"/></svg><span class="nav__name">Nomad <em>Manti</em></span></a>
-        <p class="footer__tag">Family-run Kyrgyz &amp; Central Asian kitchen.<br>Ак жол — may your road be white.</p>
+        <p class="footer__tag" data-i18n="footer.tag">Family-run Kyrgyz &amp; Central Asian kitchen.<br>Ак жол — may your road be white.</p>
       </div>
-      <div><h4>Find us</h4><p>800 NE 65th St<br>Seattle, WA 98115</p></div>
-      <div><h4>Contact</h4><p><a href="tel:+14255186966">(425) 518-6966</a><br><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">Instagram</a></p></div>
-      <div><h4>Explore</h4><p><a href="#story">Our Story</a><br><a href="#menu">Menu</a><br><a href="#visit">Hours</a><br><a href="#reviews">Leave a review</a></p></div>
+      <div><h4 data-i18n="footer.find">Find us</h4><p>800 NE 65th St<br>Seattle, WA 98115</p></div>
+      <div><h4 data-i18n="footer.contact">Contact</h4><p><a href="tel:+14255186966">(425) 518-6966</a><br><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">Instagram</a></p></div>
+      <div><h4 data-i18n="footer.explore">Explore</h4><p><a href="#story" data-i18n="nav.story">Our Story</a><br><a href="#menu" data-i18n="nav.menu">Menu</a><br><a href="#visit" data-i18n="visit.hours">Hours</a><br><a href="#reviews" data-i18n="footer.review">Leave a review</a></p></div>
     </div>
-    <p class="footer__legal container">© <span id="year">2026</span> Nomad Manti · Hero footage of the Kyrgyz Tien Shan used with credit to the original creator.</p>
+    <p class="footer__legal container">© <span id="year">2026</span> Nomad Manti · <span data-i18n="footer.legal">Hero footage of the Kyrgyz Tien Shan used with credit to the original creator.</span></p>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

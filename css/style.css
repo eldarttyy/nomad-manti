@@ -16,7 +16,7 @@
   --line: rgba(243, 234, 219, .16);
 
   --serif: "Cormorant Garamond", "Times New Roman", serif;
-  --sans: "Jost", system-ui, sans-serif;
+  --sans: "Jost", "Montserrat", system-ui, sans-serif;
 
   --gutter: clamp(16px, 4vw, 56px);
   --radius: 4px;
@@ -170,6 +170,24 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
 .nav__cta { min-height: 42px; padding: 0 20px; }
+
+/* Language picker: a real <select> laid invisibly over the short code */
+.lang {
+  position: relative; display: inline-flex; align-items: center; gap: 8px;
+  min-height: 42px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: 12px; letter-spacing: .22em; cursor: pointer;
+  transition: border-color .3s var(--ease);
+}
+.lang::after {
+  content: ""; width: 6px; height: 6px; margin-top: -3px;
+  border: solid currentColor; border-width: 0 1px 1px 0; transform: rotate(45deg);
+}
+.lang:hover, .lang:focus-within { border-color: var(--saffron); }
+.lang select {
+  position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer;
+  font-size: 16px; /* keeps iOS from zooming in */
+}
+.lang option { color: var(--ink); }
 
 .nav__burger {
   display: none; margin-left: auto;
@@ -473,7 +491,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
    ========================================================= */
 @media (max-width: 1080px) {
   .nav__links, .nav__cta { display: none; }
-  .nav__burger { display: block; }
+  .nav__burger { display: block; margin-left: 0; }
+  .nav { gap: 12px; }
+  .lang { margin-left: auto; }
 }
 
 @media (max-width: 860px) {
@@ -507,4 +527,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 
 .intro-seen .intro { display: none; }
+/* Hide the page for a moment while a non-English language is applied (see <head>) */
+.i18n-wait body { visibility: hidden; }
 .hero__title em { white-space: nowrap; }

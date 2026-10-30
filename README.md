@@ -13,10 +13,22 @@ python3 -m http.server 8642     # then open http://localhost:8642
 | `index.html` | All sections: intro, hero video, story, pillars, menu, gallery, reviews, visit, footer |
 | `css/style.css` | Design tokens at the top (shyrdak red, saffron, lapis, felt cream) |
 | `js/main.js` | Smooth scroll (Lenis), GSAP scroll animations, menu tabs, drawer, intro |
+| `js/i18n.js` | Language detection + switching (picker in the header) |
+| `js/translations.js` | **Page text per language** — keys match `data-i18n` in index.html |
+| `js/menu-translations.js` | **Menu/branch text per language**, keyed by the original wording in the data files |
 | `js/menu-data.js` | **The menu — edit prices/items here** (taken from the Instagram "Menu" highlight, Oct 2026) |
 | `assets/photos/` | Customer photos from Google Maps |
 | `assets/video/hero.*` | Instagram reel (Kyrgyz Tien Shan), rotated to landscape 1920×1080, audio removed |
 | `assets/source/` | Original downloaded reel (not served by the page) |
+
+## Languages
+English (source), Russian, Kyrgyz, Spanish. On the first visit the site follows the browser's language, falls back to English,
+and remembers whatever the visitor picks in the header (`localStorage['nm-lang']`). `?lang=xx` in the URL
+forces a language (handy for sharing). When you edit text:
+- in `index.html` → change the same key in `js/translations.js` for the other languages;
+- in `menu-data.js` → also rename the matching key in `js/menu-translations.js`
+  (untranslated items just show in English).
+Translations are machine-written — have a native speaker check the Kyrgyz before launch.
 
 ## Before launch — check with the owner
 - Phone: Instagram bio says **(425) 518-6966**; Google Maps lists (773) 458-8407. The site uses the Instagram number.

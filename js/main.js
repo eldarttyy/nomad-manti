@@ -1,5 +1,6 @@
 import { MENU, TAG_LABELS } from './menu-data.js';
 import { LINKS } from './site-config.js';
+import { initI18n, onLangChange, t, tr } from './i18n.js';
 
 const { gsap, ScrollTrigger, Lenis } = window;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -7,6 +8,7 @@ const hasGsap = Boolean(gsap && ScrollTrigger);
 
 document.documentElement.classList.add('js');
 document.getElementById('year').textContent = new Date().getFullYear();
+initI18n();
 
 /* ---------------------------------------------------------
    Smooth scroll
@@ -127,7 +129,7 @@ const drawerOpen = () => burger.getAttribute('aria-expanded') === 'true';
 function openDrawer() {
   drawer.hidden = false;
   burger.setAttribute('aria-expanded', 'true');
-  burger.setAttribute('aria-label', 'Close menu');
+  burger.setAttribute('aria-label', t('nav.close'));
   document.body.classList.add('is-locked');
   lenis?.stop();
   if (hasGsap && !reduceMotion) {
@@ -138,7 +140,7 @@ function openDrawer() {
 function closeDrawer() {
   if (!drawerOpen()) return;
   burger.setAttribute('aria-expanded', 'false');
-  burger.setAttribute('aria-label', 'Open menu');
+  burger.setAttribute('aria-label', t('nav.open'));
   document.body.classList.remove('is-locked');
   lenis?.start();
   drawer.hidden = true;
@@ -152,19 +154,23 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawe
 const tabsEl = document.getElementById('menuTabs');
 const panelEl = document.getElementById('menuPanel');
 const money = (n) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
+const portion = (p) => p.split(' ').map((w) => t('units')[w] ?? w).join(' ');
 
 function renderCategory(cat) {
   panelEl.setAttribute('aria-labelledby', `tab-${cat.id}`);
-  panelEl.innerHTML = cat.items.map((item) => `
+  panelEl.innerHTML = cat.items.map((item) => {
+    const name = tr(item.name);
+    return `
     <article class="menu-item">
       <div>
-        <h3 class="menu-item__name">${item.name}</h3>
-        ${item.native ? `<span class="menu-item__native">${item.native}</span>` : ''}
+        <h3 class="menu-item__name">${name}</h3>
+        ${item.native && item.native !== name ? `<span class="menu-item__native">${item.native}</span>` : ''}
       </div>
       <span class="menu-item__price">${money(item.price)}</span>
-      <p class="menu-item__desc">${item.desc}${item.portion ? ` <small>· ${item.portion}</small>` : ''}</p>
-      ${item.tags?.length ? `<div class="menu-item__tags">${item.tags.map((t) => `<span class="tag tag--${t}">${TAG_LABELS[t]}</span>`).join('')}</div>` : ''}
-    </article>`).join('');
+      <p class="menu-item__desc">${tr(item.desc)}${item.portion ? ` <small>· ${portion(item.portion)}</small>` : ''}</p>
+      ${item.tags?.length ? `<div class="menu-item__tags">${item.tags.map((tag) => `<span class="tag tag--${tag}">${tr(TAG_LABELS[tag])}</span>`).join('')}</div>` : ''}
+    </article>`;
+  }).join('');
   if (hasGsap && !reduceMotion) {
     gsap.from(panelEl.children, { y: 24, opacity: 0, duration: 0.7, stagger: 0.06, ease: 'expo.out' });
   }
@@ -176,7 +182,7 @@ MENU.forEach((cat, i) => {
   b.id = `tab-${cat.id}`;
   b.type = 'button';
   b.role = 'tab';
-  b.textContent = cat.label;
+  b.textContent = tr(cat.label);
   b.setAttribute('aria-selected', String(i === 0));
   b.tabIndex = i === 0 ? 0 : -1;
   b.addEventListener('click', () => selectTab(i));
@@ -200,6 +206,13 @@ tabsEl.addEventListener('keydown', (e) => {
 });
 renderCategory(MENU[0]);
 
+onLangChange(() => {
+  [...tabsEl.children].forEach((b, i) => { b.textContent = tr(MENU[i].label); });
+  const cur = [...tabsEl.children].findIndex((b) => b.getAttribute('aria-selected') === 'true');
+  renderCategory(MENU[Math.max(cur, 0)]);
+  burger.setAttribute('aria-label', t(drawerOpen() ? 'nav.close' : 'nav.open'));
+});
+
 /* ---------------------------------------------------------
    Outbound links (DoorDash / Uber Eats show only once configured)
    --------------------------------------------------------- */
@@ -214,7 +227,6 @@ document.querySelectorAll('[data-link]').forEach((el) => {
    --------------------------------------------------------- */
 const stars = [...document.querySelectorAll('#stars button')];
 const starsHint = document.getElementById('starsHint');
-const HINTS = ['', 'Thank you for telling us — we read every review.', 'Thank you — tell us what we can do better.', 'Thanks! What would make it a five next time?', 'Rakhmat! Tell others what you loved.', 'Rakhmat! Tell others what you loved.'];
 let chosen = 0;
 const paint = (n) => stars.forEach((b, i) => b.classList.toggle('is-on', i < n));
 stars.forEach((b, i) => {
@@ -224,7 +236,7 @@ stars.forEach((b, i) => {
     chosen = i + 1;
     paint(chosen);
     stars.forEach((s2, j) => s2.setAttribute('aria-pressed', String(j === i)));
-    starsHint.textContent = `${HINTS[chosen]} Opening Google — pick ${chosen} star${chosen > 1 ? 's' : ''} there too.`;
+    starsHint.textContent = t('stars.hint', chosen);
     window.open(LINKS.googleReview, '_blank', 'noopener');
   });
 });
@@ -232,17 +244,18 @@ document.getElementById('stars').addEventListener('mouseleave', () => paint(chos
 
 document.getElementById('copyReview').addEventListener('click', async (e) => {
   const btn = e.currentTarget;
+  const label = btn.textContent;
   try {
     await navigator.clipboard.writeText(LINKS.googleReview);
-    btn.textContent = 'Link copied ✓';
+    btn.textContent = t('copy.done');
   } catch {
     const ta = Object.assign(document.createElement('textarea'), { value: LINKS.googleReview });
     document.body.appendChild(ta);
     ta.select();
-    btn.textContent = document.execCommand('copy') ? 'Link copied ✓' : 'Copy failed';
+    btn.textContent = document.execCommand('copy') ? t('copy.done') : t('copy.failed');
     ta.remove();
   }
-  setTimeout(() => { btn.textContent = 'Copy review link'; }, 2200);
+  setTimeout(() => { btn.textContent = label; }, 2200);
 });
 
 /* ---------------------------------------------------------
