@@ -303,36 +303,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pillar:nth-child(3) { margin-top: 180px; }
 
 /* =========================================================
-   3D SIGNATURE
-   ========================================================= */
-.signature {
-  position: relative; overflow: hidden;
-  background: radial-gradient(ellipse at 70% 50%, #3a1410 0%, var(--felt-deep) 35%, #2a0b08 100%);
-}
-.signature__pattern { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(233, 168, 60, .06); }
-.signature__inner {
-  position: relative;
-  display: grid; grid-template-columns: minmax(300px, .8fr) 1.4fr; align-items: center;
-  min-height: 100vh; padding-block: 100px;
-}
-.dish-info { min-height: 270px; }
-.dish-info__count { font-size: 12px; letter-spacing: .3em; color: var(--saffron); margin: 0 0 12px; }
-.dish-info__name { font-family: var(--serif); font-weight: 400; font-size: clamp(38px, 3.6vw, 56px); line-height: 1; margin: 0; }
-.dish-info__native { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--saffron-soft); margin: 6px 0 18px; }
-.dish-info__desc { color: rgba(243,234,219,.78); max-width: 420px; margin: 0; }
-.dish-nav { display: flex; align-items: center; gap: 12px; margin-top: 34px; }
-.dish-nav__hint { margin-left: 14px; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
-.signature__stage { position: relative; aspect-ratio: 1 / 1; width: 100%; max-height: 82vh; justify-self: center; }
-.signature__stage canvas { position: relative; width: 100% !important; height: 100% !important; cursor: grab; touch-action: pan-y; }
-.signature__stage canvas:active { cursor: grabbing; }
-.stage-glow {
-  position: absolute; inset: 12%; border-radius: 50%;
-  background: radial-gradient(circle, rgba(233,168,60,.28), rgba(233,168,60,0) 65%);
-  filter: blur(20px);
-}
-.stage-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); }
-
-/* =========================================================
    MENU
    ========================================================= */
 .menu { background: var(--cream); color: var(--ink); padding-block: clamp(90px, 12vw, 170px); }
@@ -504,9 +474,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @media (max-width: 1080px) {
   .nav__links, .nav__cta { display: none; }
   .nav__burger { display: block; }
-  .signature__inner { grid-template-columns: 1fr; padding-block: 90px 60px; }
-  .signature__stage { order: -1; max-width: 620px; }
-  .dish-info { min-height: 0; }
 }
 
 @media (max-width: 860px) {
@@ -531,7 +498,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .menu__tabs { flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
   .menu__tab { flex: 0 0 auto; }
   .footer__grid { grid-template-columns: 1fr; }
-  .dish-nav__hint { display: none; }
   .g { height: 48vh; }
 }
 

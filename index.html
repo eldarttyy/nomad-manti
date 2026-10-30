@@ -17,14 +17,6 @@
     try { if (sessionStorage.getItem('nm-intro') === '1') document.documentElement.classList.add('intro-seen'); } catch (e) {}
   </script>
 
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
-      }
-    }
-  </script>
 </head>
 <body>
 
@@ -76,7 +68,6 @@
     </a>
     <nav class="nav__links" aria-label="Primary">
       <a href="#story">Our Story</a>
-      <a href="#signature">Signature</a>
       <a href="#menu">Menu</a>
       <a href="#gallery">Gallery</a>
       <a href="#reviews">Reviews</a>
@@ -92,11 +83,10 @@
     <svg class="drawer__pattern" aria-hidden="true"><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg>
     <nav aria-label="Mobile">
       <a href="#story"><small>01</small>Our Story</a>
-      <a href="#signature"><small>02</small>Signature Dishes</a>
-      <a href="#menu"><small>03</small>Menu</a>
-      <a href="#gallery"><small>04</small>Gallery</a>
-      <a href="#reviews"><small>05</small>Leave a Review</a>
-      <a href="#visit"><small>06</small>Location &amp; Hours</a>
+      <a href="#menu"><small>02</small>Menu</a>
+      <a href="#gallery"><small>03</small>Gallery</a>
+      <a href="#reviews"><small>04</small>Leave a Review</a>
+      <a href="#visit"><small>05</small>Location &amp; Hours</a>
     </nav>
     <p class="drawer__foot">800 NE 65th St, Seattle · <a href="tel:+14255186966">(425) 518-6966</a></p>
   </div>
@@ -182,38 +172,11 @@
       </article>
     </section>
 
-    <!-- ============ 3D SIGNATURE ============ -->
-    <section class="signature" id="signature">
-      <svg class="signature__pattern" aria-hidden="true"><rect width="100%" height="100%" fill="url(#shyrdak-gold)"/></svg>
-      <div class="signature__inner container">
-        <div class="signature__copy">
-          <p class="eyebrow">02 — The Signature Table</p>
-          <h2 class="display">Turn the plate.<br><em>Look closer.</em></h2>
-          <div class="dish-info" aria-live="polite">
-            <p class="dish-info__count"><span id="dishIndex">01</span> / <span id="dishTotal">04</span></p>
-            <h3 class="dish-info__name" id="dishName">Manti</h3>
-            <p class="dish-info__native" id="dishNative">Манты</p>
-            <p class="dish-info__desc" id="dishDesc"></p>
-          </div>
-          <div class="dish-nav">
-            <button class="round-btn" id="dishPrev" aria-label="Previous dish">←</button>
-            <button class="round-btn" id="dishNext" aria-label="Next dish">→</button>
-            <span class="dish-nav__hint">Drag to rotate</span>
-          </div>
-        </div>
-        <div class="signature__stage">
-          <div class="stage-glow" aria-hidden="true"></div>
-          <canvas id="dishCanvas" aria-label="Interactive 3D model of the selected dish"></canvas>
-          <p class="stage-fallback" hidden>3D preview isn't available on this device.</p>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ MENU ============ -->
     <section class="menu" id="menu">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow reveal">03 — Menu</p>
+          <p class="eyebrow reveal">02 — Menu</p>
           <h2 class="display reveal">What's on <em>the cloth</em></h2>
           <p class="section-head__note reveal">Open daily 11 AM – 11 PM · dine in, takeout &amp; catering. <strong>Every entrée includes bread and your choice of black tea or a canned drink.</strong> We cook in small batches — favourites can sell out early.</p>
         </header>
@@ -226,7 +189,7 @@
     <!-- ============ GALLERY ============ -->
     <section class="gallery" id="gallery">
       <div class="gallery__head container">
-        <p class="eyebrow">04 — Through the Lens</p>
+        <p class="eyebrow">03 — Through the Lens</p>
         <h2 class="display">A table <em>worth sharing</em></h2>
       </div>
       <div class="gallery__track" id="galleryTrack">
@@ -244,7 +207,7 @@
     <section class="reviews" id="reviews" aria-labelledby="reviewsTitle">
       <div class="reviews__grid container">
         <div class="reviews__voices">
-          <p class="eyebrow">05 — Guest Book</p>
+          <p class="eyebrow">04 — Guest Book</p>
           <div class="score">
             <span class="score__num">4.8</span>
             <div>
@@ -301,7 +264,7 @@
     <section class="visit" id="visit">
       <div class="visit__grid container">
         <div class="visit__info">
-          <p class="eyebrow reveal">06 — Visit</p>
+          <p class="eyebrow reveal">05 — Visit</p>
           <h2 class="display reveal">Pull up <em>a cushion</em></h2>
           <dl class="facts">
             <div class="reveal"><dt>Address</dt><dd>800 NE 65th St<br>Seattle, WA 98115<br><a class="link-arrow" href="https://www.google.com/maps/dir/?api=1&amp;destination=Nomad+Manti+800+NE+65th+St+Seattle+WA" target="_blank" rel="noopener">Get directions</a></dd></div>

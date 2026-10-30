@@ -343,31 +343,3 @@ if (hasGsap && !reduceMotion) {
 } else {
   document.querySelectorAll('.reveal').forEach((el) => { el.style.opacity = 1; el.style.transform = 'none'; });
 }
-
-/* ---------------------------------------------------------
-   3D dishes — loaded lazily when the section approaches
-   --------------------------------------------------------- */
-const stage = document.getElementById('signature');
-new IntersectionObserver(async (entries, io) => {
-  if (!entries[0].isIntersecting) return;
-  io.disconnect();
-  try {
-    const { initDishes } = await import('./dishes3d.js');
-    initDishes({
-      canvas: document.getElementById('dishCanvas'),
-      ui: {
-        index: document.getElementById('dishIndex'),
-        total: document.getElementById('dishTotal'),
-        name: document.getElementById('dishName'),
-        native: document.getElementById('dishNative'),
-        desc: document.getElementById('dishDesc'),
-        prev: document.getElementById('dishPrev'),
-        next: document.getElementById('dishNext'),
-      },
-      reduceMotion,
-    });
-  } catch (err) {
-    console.error('[NomadManti] 3D failed', err);
-    document.querySelector('.stage-fallback').hidden = false;
-  }
-}, { rootMargin: '600px' }).observe(stage);
