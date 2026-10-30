@@ -499,7 +499,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @media (max-width: 860px) {
   .story__grid, .visit__grid { grid-template-columns: 1fr; }
   .story__inset { left: auto; right: -4px; width: 52%; }
-  .story__media figcaption { right: auto; left: 0; }
+  .story__media { padding-bottom: 24px; }
+  .story__media figcaption { position: static; max-width: 44%; margin-top: 16px; line-height: 1.6; }
   .pillars { grid-template-columns: 1fr; }
   .pillar:nth-child(n) { margin-top: 0; }
   .pillar .frame { aspect-ratio: 4 / 3; }

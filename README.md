@@ -18,7 +18,7 @@ python3 -m http.server 8642     # then open http://localhost:8642
 | `js/menu-translations.js` | **Menu/branch text per language**, keyed by the original wording in the data files |
 | `js/menu-data.js` | **The menu — edit prices/items here** (taken from the Instagram "Menu" highlight, Oct 2026) |
 | `assets/photos/` | Customer photos from Google Maps |
-| `assets/video/hero.*` | Instagram reel (Kyrgyz Tien Shan), rotated to landscape 1920×1080, audio removed |
+| `assets/video/hero-v3*` | Instagram reel (Kyrgyz Tien Shan), rotated to landscape, ping-pong loop: 1920×1080 desktop, native 608×1080 portrait cut for phones, audio removed |
 | `assets/source/` | Original downloaded reel (not served by the page) |
 
 ## Languages
