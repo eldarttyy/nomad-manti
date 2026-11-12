@@ -12,7 +12,7 @@ const $ = (id) => document.getElementById(id);
 const MODE = ORDER.endpoint ? 'pay' : ORDER.sms ? 'sms' : 'call';
 const ITEMS = new Map(MENU.flatMap((cat) => cat.items).map((item) => [item.id, item]));
 const CART_KEY = 'nm-cart';
-const CONTACT_KEY = 'nm-order-contact';
+const PROFILE_KEY = 'nm-profile';
 const LAST_KEY = 'nm-last-order';
 
 const store = {
@@ -88,6 +88,7 @@ function cleanCart(raw) {
 }
 
 let cart = cleanCart(store.get(local(), CART_KEY));
+let profile = null; // set in the Profile section below, once its helpers exist
 let tipPct = ORDER.tips?.[0] ?? 0;
 
 function saveCart() { store.set(local(), CART_KEY, cart); }
@@ -117,14 +118,10 @@ const menuEl = $('orderMenu');
 const catsEl = $('cats');
 const portion = (p) => p.split(' ').map((w) => t('units')[w] ?? w).join(' ');
 
-function renderMenu() {
-  catsEl.innerHTML = MENU.map((cat) => `<a href="#cat-${cat.id}" data-cat="${cat.id}">${tr(cat.label)}</a>`).join('');
-  menuEl.innerHTML = MENU.map((cat) => `
-    <section class="o-cat" id="cat-${cat.id}" aria-labelledby="h-${cat.id}">
-      <h2 class="o-cat__title" id="h-${cat.id}">${tr(cat.label)}</h2>
-      ${cat.items.map((item) => {
-        const name = tr(item.name);
-        return `
+function itemCard(item) {
+  const name = tr(item.name);
+  const fav = Boolean(profile?.favorites.includes(item.id));
+  return `
         <article class="o-item${item.photo ? ' has-photo' : ''}">
           ${item.photo ? `<img class="o-item__img" src="assets/photos/${item.photo}" alt="" loading="lazy" width="104" height="104">` : ''}
           <div>
@@ -136,11 +133,23 @@ function renderMenu() {
             <p class="o-item__desc">${tr(item.desc)}${item.portion ? ` <small>· ${portion(item.portion)}</small>` : ''}</p>
             <div class="o-item__foot">
               <div class="o-item__tags">${(item.tags ?? []).map((tag) => `<span class="tag tag--${tag}">${tr(TAG_LABELS[tag])}</span>`).join('')}</div>
-              <button class="o-add" type="button" data-add="${item.id}"></button>
+              <div class="o-item__actions">
+                <button class="o-fav" type="button" data-fav="${item.id}" aria-pressed="${fav}" aria-label="${t(fav ? 'p.fav.remove' : 'p.fav.add')}: ${name}" title="${t(fav ? 'p.fav.remove' : 'p.fav.add')}">${fav ? '♥' : '♡'}</button>
+                <button class="o-add" type="button" data-add="${item.id}"></button>
+              </div>
             </div>
           </div>
         </article>`;
-      }).join('')}
+}
+
+function renderMenu() {
+  const favs = (profile?.favorites ?? []).map((id) => ITEMS.get(id)).filter(Boolean);
+  const cats = [...(favs.length ? [{ id: 'favs', label: t('p.favs'), items: favs }] : []), ...MENU];
+  catsEl.innerHTML = cats.map((cat) => `<a href="#cat-${cat.id}" data-cat="${cat.id}">${tr(cat.label)}</a>`).join('');
+  menuEl.innerHTML = cats.map((cat) => `
+    <section class="o-cat" id="cat-${cat.id}" aria-labelledby="h-${cat.id}">
+      <h2 class="o-cat__title" id="h-${cat.id}">${tr(cat.label)}</h2>
+      ${cat.items.map(itemCard).join('')}
     </section>`).join('');
   syncButtons();
   watchCategories();
@@ -159,11 +168,21 @@ function syncButtons() {
 }
 
 menuEl.addEventListener('click', (e) => {
+  const fav = e.target.closest('[data-fav]');
+  if (fav) {
+    if (!profile) { openProfile('fav'); return; }
+    const id = fav.dataset.fav;
+    profile.favorites = profile.favorites.includes(id) ? profile.favorites.filter((f) => f !== id) : [...profile.favorites, id];
+    saveProfile();
+    renderMenu();
+    menuEl.querySelector(`[data-fav="${id}"]`)?.focus({ preventScroll: true });
+    return;
+  }
   const btn = e.target.closest('[data-add]');
   if (!btn || btn.disabled) return;
   const item = ITEMS.get(btn.dataset.add);
   if (item.options?.length && typeof dialog.showModal === 'function') openItem(item);
-  else addToCart(item.id, Object.fromEntries((item.options ?? []).map((g) => [g, OPTION_GROUPS[g].choices[0]])), 1);
+  else addToCart(item.id, Object.fromEntries((item.options ?? []).map((g) => [g, preferred(g)])), 1);
 });
 
 // Highlight the category being read
@@ -196,10 +215,15 @@ function openItem(item) {
     <fieldset class="o-opt">
       <legend>${tr(OPTION_GROUPS[g].label)}</legend>
       ${OPTION_GROUPS[g].choices.map((choice, i) => `
-        <label><input type="radio" name="opt-${g}" value="${choice}"${i === 0 ? ' checked' : ''}>${tr(choice)}</label>`).join('')}
+        <label><input type="radio" name="opt-${g}" value="${choice}"${choice === preferred(g) ? ' checked' : ''}>${tr(choice)}</label>`).join('')}
     </fieldset>`).join('');
   syncDialog();
   dialog.showModal();
+}
+// The first choice, unless the profile names a usual drink
+function preferred(group) {
+  const choices = OPTION_GROUPS[group].choices;
+  return group === 'drink' && choices.includes(profile?.drink) ? profile.drink : choices[0];
 }
 function syncDialog() {
   $('dlgQty').textContent = dlgQty;
@@ -349,8 +373,15 @@ setInterval(() => {
    --------------------------------------------------------- */
 const fields = { name: $('fName'), phone: $('fPhone'), email: $('fEmail'), notes: $('fNotes') };
 
-const savedContact = store.get(local(), CONTACT_KEY);
-if (savedContact) ['name', 'phone', 'email'].forEach((k) => { if (typeof savedContact[k] === 'string') fields[k].value = savedContact[k]; });
+store.del(local(), 'nm-order-contact'); // older versions remembered every guest's details; now only profiles do
+
+function fillFromProfile() {
+  if (!profile) return;
+  fields.name.value = profile.name;
+  fields.phone.value = profile.phone;
+  fields.email.value = profile.email;
+  if (!fields.notes.value.trim()) fields.notes.value = profile.note;
+}
 
 function buildOrder() {
   const sums = totals();
@@ -418,10 +449,11 @@ form.addEventListener('submit', async (e) => {
   if (!form.checkValidity()) { form.reportValidity(); return; }
 
   const order = buildOrder();
-  store.set(local(), CONTACT_KEY, order.customer);
+  const lines = cart.map((l) => ({ id: l.id, opts: l.opts, qty: l.qty }));
 
   if (MODE === 'sms') {
     const text = orderText(order);
+    recordOrder({ at: order.createdAt, items: lines, total: order.amounts.total });
     showDone('sms', { text });
     location.href = smsHref(text);
     return;
@@ -437,7 +469,7 @@ form.addEventListener('submit', async (e) => {
     });
     if (!res.ok) throw new Error(`Order endpoint answered ${res.status}`);
     const data = await res.json();
-    store.set(session(), LAST_KEY, { pickup: order.pickup, orderId: data.orderId ?? null });
+    store.set(session(), LAST_KEY, { pickup: order.pickup, orderId: data.orderId ?? null, at: order.createdAt, items: lines, total: order.amounts.total });
     if (data.checkoutUrl) {
       if (new URL(data.checkoutUrl).protocol !== 'https:') throw new Error('checkoutUrl must be https');
       location.assign(data.checkoutUrl);
@@ -458,6 +490,8 @@ let doneState = null;
 
 function finishPaid(orderId) {
   const last = store.get(session(), LAST_KEY) ?? {};
+  store.del(session(), LAST_KEY);
+  if (last.items) recordOrder({ at: last.at, items: last.items, total: last.total });
   cart = [];
   saveCart();
   renderCart();
@@ -529,6 +563,134 @@ $('doneActions').addEventListener('click', async (e) => {
 });
 
 /* ---------------------------------------------------------
+   Profile — optional, and kept in this browser only (localStorage). There is no
+   password and nothing is sent anywhere: it saves the guest's details, usual drink,
+   kitchen note, favourites and last orders on this device. Guests leave no trace.
+   Real sign-in across devices needs a backend; keep this shape if one is added.
+   --------------------------------------------------------- */
+const profileDialog = $('profileDialog');
+const pf = { name: $('pName'), phone: $('pPhone'), email: $('pEmail'), drink: $('pDrink'), note: $('pNote') };
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+let profileHint = null;
+
+function cleanProfile(raw) {
+  if (!raw || typeof raw.name !== 'string' || !raw.name.trim()) return null;
+  const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+  return {
+    name: str(raw.name, 60), phone: str(raw.phone, 24), email: str(raw.email, 120),
+    drink: OPTION_GROUPS.drink.choices.includes(raw.drink) ? raw.drink : '',
+    note: str(raw.note, 200),
+    favorites: Array.isArray(raw.favorites) ? [...new Set(raw.favorites.filter((id) => ITEMS.has(id)))] : [],
+    orders: (Array.isArray(raw.orders) ? raw.orders : [])
+      .map((o) => ({ at: String(o?.at ?? ''), items: cleanCart(o?.items), total: Number(o?.total) || 0 }))
+      .filter((o) => o.items.length).slice(0, 10),
+  };
+}
+profile = cleanProfile(store.get(local(), PROFILE_KEY));
+
+function saveProfile() {
+  if (profile) store.set(local(), PROFILE_KEY, profile);
+  else store.del(local(), PROFILE_KEY);
+}
+function recordOrder(entry) {
+  if (!profile) return;
+  profile.orders = [entry, ...profile.orders].slice(0, 10);
+  saveProfile();
+}
+
+function renderProfile() {
+  const btn = $('profileBtn');
+  btn.textContent = profile ? profile.name.split(/\s+/)[0] : t('p.btn');
+  btn.classList.toggle('is-on', Boolean(profile));
+  btn.setAttribute('aria-label', profile ? `${t('p.title')}: ${profile.name}` : t('p.create'));
+
+  $('who').innerHTML = profile
+    ? `${esc(t('p.as', profile.name))} · <button type="button" data-profile>${t('p.edit')}</button>`
+    : `${t('p.guest')} · <button type="button" data-profile>${t('p.create')}</button>`;
+
+  $('pTitle').textContent = profile ? t('p.title') : t('p.create');
+  $('pLede').textContent = profile ? t('p.lede') : `${profileHint === 'fav' ? `${t('p.lede.fav')} ` : ''}${t('p.lede.new')}`;
+  $('pSave').textContent = profile ? t('p.save') : t('p.create');
+  $('pGuest').hidden = Boolean(profile);
+  const drink = pf.drink.value;
+  pf.drink.innerHTML = `<option value="">${t('p.drink.none')}</option>${OPTION_GROUPS.drink.choices.map((c) => `<option value="${c}">${tr(c)}</option>`).join('')}`;
+  pf.drink.value = drink;
+
+  $('pOrders').hidden = !profile?.orders.length;
+  $('pOrderList').innerHTML = (profile?.orders ?? []).map((o, i) => {
+    const when = new Date(o.at);
+    return `
+    <li>
+      <span class="o-history__when">${Number.isNaN(when.getTime()) ? '' : when.toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' })} · ${money(o.total)}</span>
+      <span class="o-history__items">${o.items.map((l) => `${l.qty} × ${tr(ITEMS.get(l.id).name)}`).join(', ')}</span>
+      <button class="o-history__again" type="button" data-again="${i}">${t('p.again')}</button>
+    </li>`;
+  }).join('');
+  $('pDelete').hidden = !profile;
+  $('pDelete').classList.remove('is-armed');
+  $('pDelete').textContent = t('p.delete');
+}
+
+function openProfile(hint = null) {
+  if (typeof profileDialog.showModal !== 'function') return;
+  profileHint = hint;
+  // A guest who already typed their details shouldn't have to type them twice
+  pf.name.value = profile?.name ?? fields.name.value;
+  pf.phone.value = profile?.phone ?? fields.phone.value;
+  pf.email.value = profile?.email ?? fields.email.value;
+  pf.note.value = profile?.note ?? '';
+  renderProfile();
+  pf.drink.value = profile?.drink ?? '';
+  profileDialog.showModal();
+}
+
+$('profileBtn').addEventListener('click', () => openProfile());
+$('who').addEventListener('click', (e) => { if (e.target.closest('[data-profile]')) openProfile(); });
+$('pClose').addEventListener('click', () => profileDialog.close());
+$('pGuest').addEventListener('click', () => profileDialog.close());
+profileDialog.addEventListener('click', (e) => { if (e.target === profileDialog) profileDialog.close(); });
+
+$('profileForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  profile = cleanProfile({
+    ...profile,
+    name: pf.name.value, phone: pf.phone.value, email: pf.email.value, drink: pf.drink.value, note: pf.note.value,
+  });
+  saveProfile();
+  fields.notes.value = '';
+  fillFromProfile();
+  profileDialog.close();
+  renderProfile();
+  renderMenu();
+});
+
+$('pOrderList').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-again]');
+  if (!btn) return;
+  const lines = profile.orders[Number(btn.dataset.again)].items.filter((l) => available(ITEMS.get(l.id)));
+  lines.forEach((l) => addToCart(l.id, { ...l.opts }, l.qty));
+  profileDialog.close();
+  if (doneState) backToShop();
+  $('cart').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Two taps: the first arms the button, the second deletes
+$('pDelete').addEventListener('click', (e) => {
+  const btn = e.currentTarget;
+  if (!btn.classList.contains('is-armed')) {
+    btn.classList.add('is-armed');
+    btn.textContent = t('p.delete.confirm');
+    return;
+  }
+  profile = null;
+  saveProfile();
+  ['name', 'phone', 'email', 'notes'].forEach((k) => { fields[k].value = ''; });
+  profileDialog.close();
+  renderProfile();
+  renderMenu();
+});
+
+/* ---------------------------------------------------------
    Start
    --------------------------------------------------------- */
 $('year').textContent = new Date().getFullYear();
@@ -536,12 +698,14 @@ $('callInstead').href = LINKS.phone;
 initI18n();
 
 function renderAll() {
+  renderProfile();
   renderMenu();
   renderTips();
   renderSchedule();
   renderCart();
   renderDone();
 }
+fillFromProfile();
 renderAll();
 onLangChange(renderAll);
 

@@ -70,6 +70,7 @@
       <span class="nav__name">Nomad <em>Manti</em></span>
     </a>
     <a href="index.html" class="o-nav__back" data-i18n="o.back">Back to the site</a>
+    <button class="o-nav__profile" id="profileBtn" type="button" aria-haspopup="dialog"></button>
     <label class="lang" data-lang-picker>
       <span class="lang__code" aria-hidden="true">EN</span>
       <select aria-label="Language" data-i18n-attr="aria-label:lang.label"></select>
@@ -116,6 +117,7 @@
 
           <form class="o-form" id="orderForm" novalidate>
             <h3 class="o-form__title" data-i18n="o.details">Pickup details</h3>
+            <p class="o-who" id="who"></p>
             <label class="o-field">
               <span data-i18n="o.f.time">Pickup time</span>
               <select id="fTime" name="time" required></select>
@@ -179,6 +181,46 @@
         <button class="btn btn--solid" type="submit" id="dlgAdd"></button>
       </div>
     </form>
+  </dialog>
+
+  <!-- Profile (optional — kept in this browser only, see js/order.js) -->
+  <dialog class="o-dialog o-profile" id="profileDialog" aria-labelledby="pTitle">
+    <div class="o-profile__inner">
+      <button class="o-dialog__close" type="button" id="pClose" aria-label="Close" data-i18n-attr="aria-label:o.close">×</button>
+      <h2 class="o-dialog__title" id="pTitle"></h2>
+      <p class="o-dialog__desc" id="pLede"></p>
+      <form class="o-form o-form--light" id="profileForm">
+        <label class="o-field">
+          <span data-i18n="o.f.name">Name</span>
+          <input id="pName" type="text" autocomplete="name" maxlength="60" required>
+        </label>
+        <label class="o-field">
+          <span data-i18n="o.f.phone">Phone</span>
+          <input id="pPhone" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" required pattern="[\d\s()+.\-]*(\d[\s()+.\-]*){10,}">
+        </label>
+        <label class="o-field">
+          <span data-i18n="p.f.email">Email (optional)</span>
+          <input id="pEmail" type="email" autocomplete="email" maxlength="120">
+        </label>
+        <label class="o-field">
+          <span data-i18n="p.f.drink">Usual drink with entrées</span>
+          <select id="pDrink"></select>
+        </label>
+        <label class="o-field">
+          <span data-i18n="p.f.note">Always tell the kitchen (optional)</span>
+          <textarea id="pNote" rows="2" maxlength="200" placeholder="Allergies, spice level…" data-i18n-attr="placeholder:o.f.notesPh"></textarea>
+        </label>
+        <div class="o-profile__actions">
+          <button class="btn btn--solid" type="submit" id="pSave"></button>
+          <button class="btn btn--ghost" type="button" id="pGuest" data-i18n="p.guestBtn">Continue as guest</button>
+        </div>
+      </form>
+      <section class="o-history" id="pOrders" hidden>
+        <h3 data-i18n="p.orders">Past orders</h3>
+        <ul id="pOrderList"></ul>
+      </section>
+      <button class="o-profile__delete" type="button" id="pDelete" hidden></button>
+    </div>
   </dialog>
 
   <footer class="footer">

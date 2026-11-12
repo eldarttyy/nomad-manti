@@ -63,6 +63,14 @@ Other settings there: `taxRate` (confirm the current Seattle rate), `tips`, `ope
 `prepMinutes`, `slotMinutes`, `weekendDays` (when the "Fri & Sat only" dishes can be ordered).
 Times always follow the restaurant's clock (`timezone`), not the visitor's.
 
+### Profiles
+Guests can order without one. A profile is optional and lives **only in that visitor's browser**
+(`localStorage['nm-profile']`) — no password, nothing sent to a server. It fills in name/phone/email,
+preselects their usual drink, adds a standing kitchen note, keeps favourite dishes at the top of the
+menu, and lists their last 10 orders with "Order again". Guests leave nothing stored but the cart.
+Signing in on another device, or anything the restaurant should be able to see (customer list,
+loyalty points), needs real accounts on a backend — the same one that will handle payment.
+
 ### Connecting payment
 A static site can't take card payments by itself — the secret key has to live on a small backend
 (a Cloudflare Worker, Vercel/Netlify function, etc.) that creates a hosted checkout with Stripe,
