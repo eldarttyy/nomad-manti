@@ -8,3 +8,25 @@ export const LINKS = {
   doordash: null, // e.g. 'https://www.doordash.com/store/nomad-manti-seattle-12345678/'
   ubereats: null, // e.g. 'https://www.ubereats.com/store/nomad-manti/AbCdEf...'
 };
+
+// Online ordering (order.html).
+export const ORDER = {
+  // PAYMENT: the URL of your payment backend. While this is null the page takes
+  // pay-at-pickup orders by text message instead (see `sms`). Contract in README.md.
+  endpoint: null, // e.g. 'https://orders.nomadmanti.com/checkout'
+
+  // Used only while `endpoint` is null: the guest's phone opens a pre-written text to this
+  // number. Set to null to show "call to order" instead.
+  sms: '+14255186966',
+
+  taxRate: 0.1035,        // Seattle sales tax — confirm the current rate before launch
+  tips: [0, 10, 15, 20],  // tip choices in %, shown once payments are on; [] to hide
+
+  timezone: 'America/Los_Angeles',
+  open: '11:00',          // kitchen opens
+  lastPickup: '22:30',    // latest pickup slot
+  prepMinutes: 25,        // earliest pickup = now + this
+  slotMinutes: 15,
+  weekendDays: [5, 6],    // days 'weekend' items are cooked (0 = Sunday … 5 = Fri, 6 = Sat)
+  maxQty: 20,             // per line
+};

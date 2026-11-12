@@ -359,6 +359,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .tag--signature { background: var(--saffron); border-color: var(--saffron); }
 .tag--weekend { background: var(--lapis); border-color: var(--lapis); color: var(--cream); }
+.menu__order { margin: 44px 0 0; }
+.menu__order .btn { background: var(--felt); color: var(--cream); }
+.menu__order .btn:hover { background: var(--felt-deep); }
 
 /* =========================================================
    GALLERY
@@ -443,6 +446,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .order-btn__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--saffron); }
 .order-btn--doordash .order-btn__dot { background: #ff3008; }
 .order-btn--ubereats .order-btn__dot { background: #06c167; }
+.order-btn--site { background: var(--saffron); border-color: var(--saffron); color: var(--night); }
+.order-btn--site .order-btn__dot { background: var(--night); }
 
 /* =========================================================
    VISIT

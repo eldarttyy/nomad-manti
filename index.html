@@ -102,7 +102,7 @@
       <span class="lang__code" aria-hidden="true">EN</span>
       <select aria-label="Language" data-i18n-attr="aria-label:lang.label"></select>
     </label>
-    <a href="tel:+14255186966" class="btn btn--ghost nav__cta" data-i18n="nav.cta">Call to order</a>
+    <a href="order.html" class="btn btn--solid nav__cta" data-i18n="nav.order">Order online</a>
     <button class="nav__burger" id="burger" aria-label="Open menu" data-i18n-attr="aria-label:nav.open" aria-expanded="false" aria-controls="drawer">
       <span></span><span></span>
     </button>
@@ -113,9 +113,10 @@
     <nav aria-label="Mobile" data-i18n-attr="aria-label:nav.mobile">
       <a href="#story"><small>01</small><span data-i18n="nav.story">Our Story</span></a>
       <a href="#menu"><small>02</small><span data-i18n="nav.menu">Menu</span></a>
-      <a href="#gallery"><small>03</small><span data-i18n="nav.gallery">Gallery</span></a>
-      <a href="#reviews"><small>04</small><span data-i18n="drawer.reviews">Leave a Review</span></a>
-      <a href="#visit"><small>05</small><span data-i18n="drawer.visit">Location &amp; Hours</span></a>
+      <a href="order.html"><small>03</small><span data-i18n="nav.order">Order online</span></a>
+      <a href="#gallery"><small>04</small><span data-i18n="nav.gallery">Gallery</span></a>
+      <a href="#reviews"><small>05</small><span data-i18n="drawer.reviews">Leave a Review</span></a>
+      <a href="#visit"><small>06</small><span data-i18n="drawer.visit">Location &amp; Hours</span></a>
     </nav>
     <p class="drawer__foot">800 NE 65th St, Seattle · <a href="tel:+14255186966">(425) 518-6966</a></p>
   </div>
@@ -140,7 +141,8 @@
         </h1>
         <p class="hero__lede" data-i18n="hero.lede">Hand-folded manti, golden plov and fire-kissed lamb — Kyrgyz &amp; Central Asian cooking, shared the way nomads always have. 100% halal.</p>
         <div class="hero__ctas">
-          <a href="#menu" class="btn btn--solid" data-i18n="hero.cta.menu">Explore the menu</a>
+          <a href="order.html" class="btn btn--solid" data-i18n="nav.order">Order online</a>
+          <a href="#menu" class="btn btn--ghost" data-i18n="hero.cta.menu">Explore the menu</a>
           <a href="#visit" class="btn btn--ghost" data-i18n="hero.cta.visit">Find us on NE 65th</a>
         </div>
       </div>
@@ -212,6 +214,7 @@
 
         <div class="menu__tabs" role="tablist" aria-label="Menu categories" data-i18n-attr="aria-label:menu.tabs" id="menuTabs"></div>
         <div class="menu__panel" id="menuPanel" role="tabpanel"></div>
+        <p class="menu__order"><a href="order.html" class="btn btn--solid" data-i18n="menu.order">Order online for pickup</a></p>
       </div>
     </section>
 
@@ -307,6 +310,9 @@
           <div class="order reveal" id="order">
             <p class="order__label" data-i18n="order.label">Order for pickup or delivery</p>
             <div class="order__buttons">
+              <a class="order-btn order-btn--site" href="order.html">
+                <span class="order-btn__dot"></span><span data-i18n="order.online">Order online</span>
+              </a>
               <a class="order-btn order-btn--doordash" data-link="doordash" target="_blank" rel="noopener" hidden>
                 <span class="order-btn__dot"></span>DoorDash
               </a>
@@ -339,7 +345,8 @@
         <svg class="final__mark" aria-hidden="true"><use href="#tunduk"/></svg>
         <h2 class="display" data-i18n="final.title">The tea is poured.<br><em>Your seat is waiting.</em></h2>
         <div class="hero__ctas">
-          <a href="tel:+14255186966" class="btn btn--solid" data-i18n="final.call">Call (425) 518-6966</a>
+          <a href="order.html" class="btn btn--solid" data-i18n="nav.order">Order online</a>
+          <a href="tel:+14255186966" class="btn btn--ghost" data-i18n="final.call">Call (425) 518-6966</a>
           <a href="#reviews" class="btn btn--ghost" data-i18n="final.rate">Rate your visit</a>
         </div>
       </div>
@@ -356,7 +363,7 @@
       </div>
       <div><h4 data-i18n="footer.find">Find us</h4><p>800 NE 65th St<br>Seattle, WA 98115</p></div>
       <div><h4 data-i18n="footer.contact">Contact</h4><p><a href="tel:+14255186966">(425) 518-6966</a><br><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">Instagram</a></p></div>
-      <div><h4 data-i18n="footer.explore">Explore</h4><p><a href="#story" data-i18n="nav.story">Our Story</a><br><a href="#menu" data-i18n="nav.menu">Menu</a><br><a href="#visit" data-i18n="visit.hours">Hours</a><br><a href="#reviews" data-i18n="footer.review">Leave a review</a></p></div>
+      <div><h4 data-i18n="footer.explore">Explore</h4><p><a href="#story" data-i18n="nav.story">Our Story</a><br><a href="#menu" data-i18n="nav.menu">Menu</a><br><a href="order.html" data-i18n="nav.order">Order online</a><br><a href="#visit" data-i18n="visit.hours">Hours</a><br><a href="#reviews" data-i18n="footer.review">Leave a review</a></p></div>
     </div>
     <p class="footer__legal container">© <span id="year">2026</span> Nomad Manti · <span data-i18n="footer.legal">Hero footage of the Kyrgyz Tien Shan used with credit to the original creator.</span></p>
   </footer>

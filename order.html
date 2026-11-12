@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="o.meta.title">Order online — Nomad Manti · Seattle</title>
+  <meta name="description" data-i18n-attr="content:o.meta.desc" content="Order manti, lagman, plov and shashlik online for pickup at Nomad Manti, 800 NE 65th St, Seattle. 100% halal.">
+  <meta name="theme-color" content="#14100d">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://www.nomadmanti.com/order.html">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&text=%D2%A2%D2%A3%D3%A8%D3%A9%D2%AE%D2%AF&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/order.css">
+  <script>
+    document.documentElement.classList.add('js');
+    // Same language pick as index.html: ?lang= → saved choice → browser languages → English
+    (function () {
+      var langs = ['en', 'ru', 'ky', 'es'], source = 'en', l, d = document.documentElement;
+      try { l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('nm-lang'); } catch (e) {}
+      if (langs.indexOf(l) < 0) {
+        l = source;
+        var prefs = navigator.languages || [navigator.language];
+        for (var i = 0; i < prefs.length; i++) {
+          var code = String(prefs[i]).toLowerCase().split('-')[0];
+          if (langs.indexOf(code) > -1) { l = code; break; }
+        }
+      }
+      d.lang = l;
+      if (l !== source) {
+        d.classList.add('i18n-wait');
+        setTimeout(function () { d.classList.remove('i18n-wait'); }, 2500);
+      }
+    })();
+  </script>
+</head>
+<body class="order-page">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="tunduk" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M40 22 Q50 50 40 78 M50 20 V80 M60 22 Q50 50 60 78" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M22 40 Q50 50 78 40 M20 50 H80 M22 60 Q50 50 78 60" fill="none" stroke="currentColor" stroke-width="2.4"/>
+      </symbol>
+      <symbol id="horn" viewBox="0 0 120 120">
+        <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+          <path id="h1" d="M60 60 C60 38 46 26 34 30 C24 34 26 48 36 46 C42 45 42 38 38 37"/>
+          <use href="#h1" transform="matrix(-1 0 0 1 120 0)"/>
+          <use href="#h1" transform="matrix(1 0 0 -1 0 120)"/>
+          <use href="#h1" transform="matrix(-1 0 0 -1 120 120)"/>
+        </g>
+        <path d="M60 48 L72 60 L60 72 L48 60 Z" fill="currentColor"/>
+      </symbol>
+      <pattern id="shyrdak" width="120" height="120" patternUnits="userSpaceOnUse">
+        <use href="#horn" width="120" height="120" style="color:#a3301f"/>
+      </pattern>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#orderMenu" data-i18n="skip">Skip to content</a>
+
+  <header class="nav o-nav">
+    <a href="index.html" class="nav__brand" aria-label="Nomad Manti — home" data-i18n-attr="aria-label:nav.home">
+      <svg class="nav__mark"><use href="#tunduk"/></svg>
+      <span class="nav__name">Nomad <em>Manti</em></span>
+    </a>
+    <a href="index.html" class="o-nav__back" data-i18n="o.back">Back to the site</a>
+    <label class="lang" data-lang-picker>
+      <span class="lang__code" aria-hidden="true">EN</span>
+      <select aria-label="Language" data-i18n-attr="aria-label:lang.label"></select>
+    </label>
+  </header>
+
+  <main>
+    <section class="o-head">
+      <div class="container">
+        <p class="eyebrow" data-i18n="o.eyebrow">Order online</p>
+        <h1 class="display" data-i18n="o.title">Order for <em>pickup</em></h1>
+        <p class="o-head__lede" data-i18n="o.lede">Pick your dishes, choose a time, and we'll have everything hot and ready at 800 NE 65th St. Every entrée comes with bread and black tea or a canned drink.</p>
+        <p class="o-status" id="status" aria-live="polite"></p>
+      </div>
+    </section>
+    <div class="pattern-band pattern-band--thin" aria-hidden="true"><svg><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg></div>
+
+    <p class="o-notice container" id="notice" role="status" hidden></p>
+
+    <!-- ============ MENU + CART ============ -->
+    <div class="o-grid container" id="shop">
+      <div class="o-menu">
+        <nav class="o-cats" id="cats" aria-label="Menu categories" data-i18n-attr="aria-label:menu.tabs"></nav>
+        <div id="orderMenu" tabindex="-1"></div>
+      </div>
+
+      <aside class="o-cart" id="cart" aria-labelledby="cartTitle">
+        <h2 class="o-cart__title" id="cartTitle" data-i18n="o.cart.title">Your order</h2>
+        <p class="o-cart__empty" id="cartEmpty" data-i18n="o.cart.empty">Nothing here yet — add a dish from the menu.</p>
+        <ul class="o-lines" id="lines"></ul>
+
+        <div id="checkout" hidden>
+          <fieldset class="o-tips" id="tips" hidden>
+            <legend data-i18n="o.tip">Tip</legend>
+            <div class="o-tips__row" id="tipChoices"></div>
+          </fieldset>
+
+          <dl class="o-totals">
+            <div><dt data-i18n="o.subtotal">Subtotal</dt><dd id="tSubtotal"></dd></div>
+            <div><dt data-i18n="o.tax">Estimated tax</dt><dd id="tTax"></dd></div>
+            <div id="tTipRow" hidden><dt data-i18n="o.tip">Tip</dt><dd id="tTip"></dd></div>
+            <div class="o-totals__total"><dt data-i18n="o.total">Total</dt><dd id="tTotal"></dd></div>
+          </dl>
+
+          <form class="o-form" id="orderForm" novalidate>
+            <h3 class="o-form__title" data-i18n="o.details">Pickup details</h3>
+            <label class="o-field">
+              <span data-i18n="o.f.time">Pickup time</span>
+              <select id="fTime" name="time" required></select>
+            </label>
+            <label class="o-field">
+              <span data-i18n="o.f.name">Name</span>
+              <input id="fName" name="name" type="text" autocomplete="name" maxlength="60" required>
+            </label>
+            <label class="o-field">
+              <span data-i18n="o.f.phone">Phone</span>
+              <input id="fPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" required pattern="[\d\s()+.\-]*(\d[\s()+.\-]*){10,}">
+            </label>
+            <label class="o-field" id="fEmailField">
+              <span data-i18n="o.f.email">Email for your receipt (optional)</span>
+              <input id="fEmail" name="email" type="email" autocomplete="email" maxlength="120">
+            </label>
+            <label class="o-field">
+              <span data-i18n="o.f.notes">Notes for the kitchen (optional)</span>
+              <textarea id="fNotes" name="notes" rows="2" maxlength="300" placeholder="Allergies, spice level…" data-i18n-attr="placeholder:o.f.notesPh"></textarea>
+            </label>
+
+            <p class="o-form__error" id="formError" role="alert" hidden></p>
+            <button class="btn btn--solid o-submit" type="submit" id="submit"></button>
+            <p class="o-form__fine" id="fine"></p>
+          </form>
+          <a class="btn btn--ghost o-submit" id="callInstead" href="tel:+14255186966" data-link="phone" data-i18n="final.call" hidden>Call (425) 518-6966</a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ============ CONFIRMATION ============ -->
+    <section class="o-done container" id="done" tabindex="-1" hidden>
+      <svg class="o-done__mark" aria-hidden="true"><use href="#tunduk"/></svg>
+      <h2 class="display" id="doneTitle"></h2>
+      <p class="o-done__text" id="doneText"></p>
+      <pre class="o-done__summary" id="doneSummary" hidden></pre>
+      <div class="o-done__actions" id="doneActions"></div>
+    </section>
+  </main>
+
+  <!-- Sticky bar on phones: jumps to the cart -->
+  <button class="o-bar" id="bar" type="button" hidden>
+    <span class="o-bar__count" id="barCount"></span>
+    <span data-i18n="o.bar.view">View order</span>
+    <span class="o-bar__total" id="barTotal"></span>
+  </button>
+
+  <!-- Item options -->
+  <dialog class="o-dialog" id="itemDialog" aria-labelledby="dlgTitle">
+    <form method="dialog" id="dlgForm">
+      <button class="o-dialog__close" type="button" id="dlgClose" aria-label="Close" data-i18n-attr="aria-label:o.close">×</button>
+      <h2 class="o-dialog__title" id="dlgTitle"></h2>
+      <p class="o-dialog__desc" id="dlgDesc"></p>
+      <div id="dlgOptions"></div>
+      <div class="o-dialog__foot">
+        <div class="o-step" role="group" aria-label="Quantity" data-i18n-attr="aria-label:o.qty">
+          <button type="button" id="dlgLess" aria-label="Fewer" data-i18n-attr="aria-label:o.less">−</button>
+          <span id="dlgQty" aria-live="polite">1</span>
+          <button type="button" id="dlgMore" aria-label="More" data-i18n-attr="aria-label:o.more">+</button>
+        </div>
+        <button class="btn btn--solid" type="submit" id="dlgAdd"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="footer">
+    <p class="footer__legal container">© <span id="year">2026</span> Nomad Manti · 800 NE 65th St, Seattle, WA 98115 · <a href="tel:+14255186966">(425) 518-6966</a> · <a href="index.html" data-i18n="o.back">Back to the site</a></p>
+  </footer>
+
+  <script type="module" src="js/order.js"></script>
+</body>
+</html>

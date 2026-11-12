@@ -16,6 +16,8 @@ python3 -m http.server 8642     # then open http://localhost:8642
 | `js/i18n.js` | Language detection + switching (picker in the header) |
 | `js/translations.js` | **Page text per language** — keys match `data-i18n` in index.html |
 | `js/menu-translations.js` | **Menu/branch text per language**, keyed by the original wording in the data files |
+| `order.html`, `css/order.css`, `js/order.js` | **Online ordering page** — menu, cart, pickup details (see "Online ordering" below) |
+| `js/site-config.js` | Outbound links and the `ORDER` settings (payment endpoint, tax, hours, prep time) |
 | `js/menu-data.js` | **The menu — edit prices/items here** (taken from the Instagram "Menu" highlight, Oct 2026) |
 | `assets/photos/` | Customer photos from Google Maps |
 | `assets/video/hero-v3*` | Instagram reel (Kyrgyz Tien Shan), rotated to landscape, ping-pong loop: 1920×1080 desktop, native 608×1080 portrait cut for phones, audio removed |
@@ -46,3 +48,56 @@ Translations are machine-written — have a native speaker check the Kyrgyz befo
 ## Delivery (DoorDash / Uber Eats)
 Once the restaurant is live on an app, paste its store URL into `js/site-config.js`
 (`doordash:` / `ubereats:`). The matching button appears in the Visit section automatically.
+
+## Online ordering (`order.html`)
+Pickup only, same-day. The page builds the menu from `js/menu-data.js`, keeps the cart in the
+visitor's browser, and hands the order off according to `ORDER` in `js/site-config.js`:
+
+| `ORDER.endpoint` | `ORDER.sms` | What the checkout button does |
+|---|---|---|
+| `null` (now) | a phone number | **Text my order** — opens the guest's messages app with the order written out, addressed to that number. Pay at pickup. Phones only; nothing is recorded anywhere else, so someone has to watch that phone. |
+| `null` | `null` | Shows a "call to order" button only. |
+| a URL | anything | **Continue to payment** — sends the order to your backend, which answers with the payment page to open. Tips and the email field appear in this mode. |
+
+Other settings there: `taxRate` (confirm the current Seattle rate), `tips`, `open` / `lastPickup`,
+`prepMinutes`, `slotMinutes`, `weekendDays` (when the "Fri & Sat only" dishes can be ordered).
+Times always follow the restaurant's clock (`timezone`), not the visitor's.
+
+### Connecting payment
+A static site can't take card payments by itself — the secret key has to live on a small backend
+(a Cloudflare Worker, Vercel/Netlify function, etc.) that creates a hosted checkout with Stripe,
+Square or whatever the restaurant uses. Put that backend's URL in `ORDER.endpoint`.
+
+The page sends `POST <endpoint>` with `Content-Type: application/json`:
+```json
+{
+  "version": 1,
+  "createdAt": "2026-11-12T03:37:51.600Z",
+  "lang": "en",
+  "items": [
+    { "id": "boso-lagman", "name": "Boso Lagman", "qty": 1, "unitPrice": 2299, "options": { "drink": "Black tea" } }
+  ],
+  "amounts": { "currency": "usd", "taxRate": 0.1035, "tipPercent": 15, "subtotal": 2299, "tax": 238, "tip": 345, "total": 2882 },
+  "pickup": { "type": "scheduled", "date": "2026-11-11", "time": "20:30", "timezone": "America/Los_Angeles" },
+  "customer": { "name": "…", "phone": "…", "email": "" },
+  "notes": "",
+  "returnUrls": { "success": "https://www.nomadmanti.com/order.html?status=success", "cancel": "https://www.nomadmanti.com/order.html?status=cancelled" }
+}
+```
+Money is in cents; `pickup.type` is `asap` or `scheduled`.
+
+The backend answers `200` with JSON, either
+- `{ "checkoutUrl": "https://…", "orderId": "NM-1042" }` — the page redirects there (https only). After
+  payment, send the guest to `returnUrls.success` (add `&order=NM-1042` to show the number) or to
+  `returnUrls.cancel` if they back out; or
+- `{ "orderId": "NM-1042" }` with no `checkoutUrl` — the page shows the confirmation straight away.
+
+Any other status shows "couldn't send your order — call us" and keeps the cart.
+
+The backend must:
+- **recompute prices, tax and total from the item `id`s and its own price list** — everything in
+  `amounts` and `unitPrice` comes from the browser and can be edited by anyone;
+- allow CORS from `https://www.nomadmanti.com` (`POST` + the `Content-Type` header, and the `OPTIONS` preflight);
+- tell the kitchen (email / SMS / POS ticket) only after the payment provider confirms payment
+  (its webhook), not when the guest lands on the success URL — that URL is just a thank-you page;
+- re-check opening hours and the pickup time.
