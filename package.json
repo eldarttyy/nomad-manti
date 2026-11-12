@@ -1,0 +1,7 @@
+{
+  "name": "nomad-manti-payments",
+  "private": true,
+  "type": "module",
+  "description": "Only used by Vercel for api/checkout.js (the Stripe payment backend). The website itself has no build step.",
+  "engines": { "node": "22.x" }
+}

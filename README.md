@@ -71,10 +71,42 @@ menu, and lists their last 10 orders with "Order again". Guests leave nothing st
 Signing in on another device, or anything the restaurant should be able to see (customer list,
 loyalty points), needs real accounts on a backend — the same one that will handle payment.
 
-### Connecting payment
-A static site can't take card payments by itself — the secret key has to live on a small backend
-(a Cloudflare Worker, Vercel/Netlify function, etc.) that creates a hosted checkout with Stripe,
-Square or whatever the restaurant uses. Put that backend's URL in `ORDER.endpoint`.
+### Payment (Stripe)
+A static site can't take card payments by itself — the secret key has to live on a small backend.
+That backend is `api/checkout.js`: one Vercel Function that checks the order, recomputes the prices
+from `js/menu-data.js` and `js/site-config.js` (the same files the site reads, so there is one price
+list) and opens a Stripe Checkout page. The guest pays on Stripe's page — cards, Apple Pay and
+Google Pay — and comes back to `order.html` for the confirmation.
+
+**Turning it on**
+1. In Stripe, copy the secret key (Developers → API keys). Use the `sk_test_…` key first.
+2. From the repo root run `npx vercel` and follow the prompts (new project, no build settings).
+   `.vercelignore` makes sure only the function and its two data files are uploaded.
+3. Give the project the key: `npx vercel env add STRIPE_SECRET_KEY production`, then deploy with
+   `npx vercel --prod`.
+4. Put the function's address in `ORDER.endpoint` (`js/site-config.js`), e.g.
+   `https://<project>.vercel.app/api/checkout`, and push. The order page switches from
+   "Text my order" to "Continue to payment" and shows the tip and email fields.
+5. Pay with the test card `4242 4242 4242 4242` (any future date, any CVC). When it works, replace
+   the key with the `sk_live_…` one (`vercel env rm` / `env add`, then `vercel --prod` again).
+
+Redeploy (`npx vercel --prod`) whenever the menu, prices, tax rate or hours change — or connect the
+GitHub repo to the Vercel project so every push does it.
+
+**How the kitchen sees an order.** Each payment in Stripe carries the order: the line items, and a
+description like `Pickup order NM-1A2B3C4D — 7:00 PM — Name, phone` plus notes in the metadata.
+Turn on "Successful payments" emails in Stripe (Settings → Communication preferences) and install
+the Stripe Dashboard phone app for a push notification per order. To send guests a receipt, enable
+it in Stripe under Settings → Customer emails. There is no webhook, printer or POS ticket yet.
+
+**Limits to know**
+- Tax is added as a plain "Sales tax" line at `ORDER.taxRate`; it is not Stripe Tax and nothing is filed for you.
+- Inside the iPhone/Android app, Stripe's page opens in the phone's browser and the guest finishes
+  on the website; the cart inside the app is not cleared.
+- Other env vars: `SITE_URL` (default `https://www.nomadmanti.com`) and `ALLOWED_ORIGINS`
+  (extra comma-separated origins, e.g. a test server).
+
+**The contract** (only matters if the backend is ever replaced)
 
 The page sends `POST <endpoint>` with `Content-Type: application/json`:
 ```json
@@ -102,13 +134,8 @@ The backend answers `200` with JSON, either
 
 Any other status shows "couldn't send your order — call us" and keeps the cart.
 
-The backend must:
-- **recompute prices, tax and total from the item `id`s and its own price list** — everything in
-  `amounts` and `unitPrice` comes from the browser and can be edited by anyone;
-- allow CORS from `https://www.nomadmanti.com` (`POST` + the `Content-Type` header, and the `OPTIONS` preflight);
-- tell the kitchen (email / SMS / POS ticket) only after the payment provider confirms payment
-  (its webhook), not when the guest lands on the success URL — that URL is just a thank-you page;
-- re-check opening hours and the pickup time.
+`api/checkout.js` ignores `amounts`, `unitPrice` and `returnUrls` — anything from the browser can be
+edited — and re-checks opening hours, the pickup time, weekend-only dishes and the caller's origin.
 
 ## The app (iPhone and Android)
 The app is the same site running in "app mode": when it is opened from the home screen or inside

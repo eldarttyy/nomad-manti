@@ -1,0 +1,9 @@
+# Vercel only hosts the payment function; the website itself is served by GitHub Pages.
+# Upload nothing except the function and the two data files it reads.
+/*
+!/api
+!/js
+!/package.json
+/js/*
+!/js/menu-data.js
+!/js/site-config.js
