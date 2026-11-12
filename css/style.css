@@ -170,6 +170,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   transition: transform .45s var(--ease);
 }
 .nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
+/* the longer languages have no room for a sixth link on smaller laptops; it stays in the drawer and footer */
+@media (max-width: 1399px) { .nav__links .nav__profile { display: none; } }
 .nav__cta { min-height: 42px; padding: 0 20px; }
 
 /* Language picker: a real <select> laid invisibly over the short code */
