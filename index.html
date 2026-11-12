@@ -2,11 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title data-i18n="meta.title">Nomad Manti — Kyrgyz &amp; Central Asian Kitchen · Seattle</title>
   <meta name="description" data-i18n-attr="content:meta.desc" content="Hand-folded manti, plov, boso lagman and weekend lamb shashlik. A 100% halal Kyrgyz &amp; Central Asian kitchen at 800 NE 65th St, Seattle.">
   <meta name="theme-color" content="#14100d">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <!-- Installable app: Add to Home Screen on iPhone, and the iOS shell in app/ -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/app/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Nomad Manti">
   <link rel="alternate" hreflang="en" href="https://www.nomadmanti.com/?lang=en">
   <link rel="alternate" hreflang="ru" href="https://www.nomadmanti.com/?lang=ru">
   <link rel="alternate" hreflang="ky" href="https://www.nomadmanti.com/?lang=ky">
@@ -21,6 +28,8 @@
   <link rel="stylesheet" href="css/style.css">
   <script>
     document.documentElement.classList.add('js');
+    // Running as an app (home-screen icon or the iOS shell)? See js/app.js
+    if (window.Capacitor || navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches)) document.documentElement.classList.add('is-app');
     // Pick the language before first paint: ?lang= → saved choice → browser languages → English
     (function () {
       var langs = ['en', 'ru', 'ky', 'es'], source = 'en', l, d = document.documentElement;

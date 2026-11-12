@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Nomad Manti</string>
+    <string name="title_activity_main">Nomad Manti</string>
+    <string name="package_name">com.nomadmanti.app</string>
+    <string name="custom_url_scheme">com.nomadmanti.app</string>
+</resources>

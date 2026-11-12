@@ -7,6 +7,7 @@
 import { MENU, TAG_LABELS, OPTION_GROUPS } from './menu-data.js';
 import { LINKS, ORDER } from './site-config.js';
 import { initI18n, onLangChange, t, tr, lang } from './i18n.js';
+import { initApp, setTab } from './app.js';
 
 const $ = (id) => document.getElementById(id);
 const MODE = ORDER.endpoint ? 'pay' : ORDER.sms ? 'sms' : 'call';
@@ -642,9 +643,17 @@ function openProfile(hint = null) {
   renderProfile();
   pf.drink.value = profile?.drink ?? '';
   profileDialog.showModal();
+  setTab('profile');
 }
 
 $('profileBtn').addEventListener('click', () => openProfile());
+// App tab bar: "Profile" opens the same dialog (also when arriving from the home page)
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.tabbar [data-tab="profile"]')) return;
+  e.preventDefault();
+  openProfile();
+});
+profileDialog.addEventListener('close', () => setTab('order'));
 $('who').addEventListener('click', (e) => { if (e.target.closest('[data-profile]')) openProfile(); });
 $('pClose').addEventListener('click', () => profileDialog.close());
 $('pGuest').addEventListener('click', () => profileDialog.close());
@@ -696,6 +705,7 @@ $('pDelete').addEventListener('click', (e) => {
 $('year').textContent = new Date().getFullYear();
 $('callInstead').href = LINKS.phone;
 initI18n();
+initApp();
 
 function renderAll() {
   renderProfile();
@@ -709,6 +719,11 @@ fillFromProfile();
 renderAll();
 onLangChange(renderAll);
 
+if (location.hash === '#profile') {
+  history.replaceState(null, '', `${location.pathname}${location.search}`);
+  openProfile();
+}
+
 // Coming back from the payment page
 const params = new URLSearchParams(location.search);
 const status = params.get('status');
@@ -720,5 +735,6 @@ if (status) {
   }
   params.delete('status');
   params.delete('order');
-  history.replaceState(null, '', `${location.pathname}${params.size ? `?${params}` : ''}`);
+  const rest = params.toString(); // not params.size — Safari only has it from iOS 17
+  history.replaceState(null, '', `${location.pathname}${rest ? `?${rest}` : ''}`);
 }

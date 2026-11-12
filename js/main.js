@@ -1,6 +1,7 @@
 import { MENU, TAG_LABELS } from './menu-data.js';
 import { LINKS } from './site-config.js';
 import { initI18n, onLangChange, t, tr } from './i18n.js';
+import { initApp } from './app.js';
 
 const { gsap, ScrollTrigger, Lenis } = window;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -9,6 +10,7 @@ const hasGsap = Boolean(gsap && ScrollTrigger);
 document.documentElement.classList.add('js');
 document.getElementById('year').textContent = new Date().getFullYear();
 initI18n();
+initApp();
 
 /* ---------------------------------------------------------
    Smooth scroll

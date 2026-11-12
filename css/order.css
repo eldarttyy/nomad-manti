@@ -188,7 +188,7 @@ a.o-submit[hidden] { display: none; }
 
 /* ---------- Phone bar ---------- */
 .o-bar {
-  position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 60;
+  position: fixed; left: 12px; right: 12px; bottom: calc(12px + max(var(--tabbar), env(safe-area-inset-bottom))); z-index: 60;
   display: none; align-items: center; gap: 12px;
   min-height: 56px; padding: 0 20px; border: 0; border-radius: 999px;
   background: var(--felt); color: var(--cream);

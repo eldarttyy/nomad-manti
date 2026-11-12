@@ -18,7 +18,8 @@
   --serif: "Cormorant Garamond", "Times New Roman", serif;
   --sans: "Jost", "Montserrat", system-ui, sans-serif;
 
-  --gutter: clamp(16px, 4vw, 56px);
+  --gutter: max(clamp(16px, 4vw, 56px), env(safe-area-inset-left), env(safe-area-inset-right));
+  --tabbar: 0px;          /* height of the app tab bar; set in app mode below */
   --radius: 4px;
   --ease: cubic-bezier(.22, 1, .36, 1);
 }
@@ -143,14 +144,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; gap: 32px;
-  padding: 18px var(--gutter);
+  padding: calc(18px + env(safe-area-inset-top)) var(--gutter) 18px;
   transition: background .5s var(--ease), padding .5s var(--ease), transform .5s var(--ease);
 }
 .nav.is-scrolled {
   background: rgba(20, 16, 13, .82);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  padding-block: 12px;
+  padding-block: calc(12px + env(safe-area-inset-top)) 12px;
   border-bottom: 1px solid var(--line);
 }
 .nav.is-hidden { transform: translateY(-100%); }
@@ -536,3 +537,28 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* Hide the page for a moment while a non-English language is applied (see <head>) */
 .i18n-wait body { visibility: hidden; }
 .hero__title em { white-space: nowrap; }
+
+/* =========================================================
+   APP MODE — home-screen web app and the iOS shell (js/app.js)
+   ========================================================= */
+.tabbar { display: none; }
+.is-app { --tabbar: calc(60px + env(safe-area-inset-bottom)); -webkit-tap-highlight-color: transparent; }
+.is-app body { padding-bottom: var(--tabbar); -webkit-touch-callout: none; overscroll-behavior-y: none; }
+.is-app .tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 95;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  height: var(--tabbar); padding: 0 max(8px, env(safe-area-inset-left)) env(safe-area-inset-bottom);
+  background: rgba(20, 16, 13, .92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line); color: var(--cream);
+}
+.tabbar a {
+  display: grid; align-content: center; justify-items: center; gap: 4px;
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 400; text-decoration: none;
+  color: var(--muted); transition: color .3s var(--ease);
+}
+.tabbar a.is-current { color: var(--saffron); }
+.tabbar svg { width: 24px; height: 24px; }
+.tabbar span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.is-app .drawer { padding-bottom: calc(40px + var(--tabbar)); }
+.is-app .hero { padding-bottom: 28px; }
+.is-app .footer__legal { padding-bottom: 24px; }

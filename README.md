@@ -109,3 +109,52 @@ The backend must:
 - tell the kitchen (email / SMS / POS ticket) only after the payment provider confirms payment
   (its webhook), not when the guest lands on the success URL — that URL is just a thank-you page;
 - re-check opening hours and the pickup time.
+
+## The app (iPhone and Android)
+The app is the same site running in "app mode": when it is opened from the home screen or inside
+the iOS shell, `<html>` gets the class `is-app` and `js/app.js` adds a bottom tab bar
+(Home · Order · Visit · Profile). Styles are at the end of `css/style.css`. There is one codebase —
+change the site and the app changes with it.
+
+**1. Home-screen app (works today, no App Store).** On an iPhone open nomadmanti.com in Safari →
+Share → *Add to Home Screen*. It gets the icon in `assets/app/`, opens full-screen, and `sw.js` keeps
+the last-seen pages available offline (network first, so new deploys show up immediately).
+`manifest.webmanifest` holds the name, colours and icons.
+
+**2. App Store app (`app/`).** A [Capacitor](https://capacitorjs.com) project that bundles the site
+into a native iOS app (`com.nomadmanti.app`, iOS 16+, portrait). The Xcode project in `app/ios/`
+was generated on Linux and has **never been built** — that needs a Mac:
+
+```bash
+cd app
+npm install
+npm run ios        # copies the site into app/www, syncs it into the Xcode project, opens Xcode
+```
+Needs Node 20+, Xcode and CocoaPods (`sudo gem install cocoapods`). In Xcode pick your team under
+*Signing & Capabilities*, then run on a simulator or phone. Re-run `npm run sync` after every change
+to the site — the app carries its own copy, it does not load nomadmanti.com.
+
+**3. Android app (`app/android/`).** The same Capacitor project, Android side (`com.nomadmanti.app`,
+Android 6+, portrait, dark system bars, adaptive icon). Also **never built** — this machine has Java
+but no Android SDK. It can be built on Linux, Windows or Mac:
+
+```bash
+cd app
+npm install
+npm run android    # syncs the site, opens the project in Android Studio
+npm run apk        # or: debug APK at android/app/build/outputs/apk/debug/app-debug.apk
+```
+Needs Node 20+, JDK 21 and the Android SDK (installing Android Studio is the simple way; for
+`npm run apk` without it, set `ANDROID_HOME`). The debug APK can be installed straight onto a phone
+for testing. Google Play needs a developer account ($25 once), a signed release bundle
+(Android Studio → Build → Generate Signed App Bundle — keep the keystore safe, it can't be replaced),
+a privacy policy URL, and for new personal accounts a closed test with 12 testers for 14 days.
+On Android the site can also be installed without any store: Chrome → menu → *Add to Home screen*.
+
+Before submitting to the App Store:
+- an Apple Developer account ($99/year); change the bundle id in `app/capacitor.config.json` and Xcode if needed;
+- test on a real iPhone: the call / text / maps / Instagram links, the "Text my order" hand-off, the notch and home-bar spacing;
+- Apple can reject apps that are only a wrapped website (guideline 4.2). Ordering, profiles and offline
+  support help; push notifications for "order ready" would help more;
+- once payments are on, the hosted checkout must return into the app (an in-app browser or universal
+  links) — `returnUrls` currently points at the app's internal address, which a payment page can't open.

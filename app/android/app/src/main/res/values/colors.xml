@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nomad Manti palette (css/style.css): night, shyrdak red, saffron -->
+    <color name="colorPrimary">#14100D</color>
+    <color name="colorPrimaryDark">#14100D</color>
+    <color name="colorAccent">#E9A83C</color>
+</resources>

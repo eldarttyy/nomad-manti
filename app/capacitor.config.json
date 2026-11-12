@@ -1,0 +1,15 @@
+{
+  "appId": "com.nomadmanti.app",
+  "appName": "Nomad Manti",
+  "webDir": "www",
+  "backgroundColor": "#14100d",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#14100d",
+    "preferredContentMode": "mobile"
+  },
+  "android": {
+    "backgroundColor": "#14100d",
+    "adjustMarginsForEdgeToEdge": "auto"
+  }
+}
