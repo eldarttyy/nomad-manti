@@ -71,40 +71,49 @@ menu, and lists their last 10 orders with "Order again". Guests leave nothing st
 Signing in on another device, or anything the restaurant should be able to see (customer list,
 loyalty points), needs real accounts on a backend — the same one that will handle payment.
 
-### Payment (Stripe)
+### Payment (Clover)
 A static site can't take card payments by itself — the secret key has to live on a small backend.
 That backend is `api/checkout.js`: one Vercel Function that checks the order, recomputes the prices
 from `js/menu-data.js` and `js/site-config.js` (the same files the site reads, so there is one price
-list) and opens a Stripe Checkout page. The guest pays on Stripe's page — cards, Apple Pay and
-Google Pay — and comes back to `order.html` for the confirmation.
+list) and opens a Clover Hosted Checkout page. The guest pays on Clover's page and comes back to
+`order.html` for the confirmation. The money lands in the same Clover account as in-store sales, and
+the order appears in Clover's Orders app like any other order.
 
-**Turning it on**
-1. In Stripe, copy the secret key (Developers → API keys). Use the `sk_test_…` key first.
-2. From the repo root run `npx vercel` and follow the prompts (new project, no build settings).
-   `.vercelignore` makes sure only the function and its two data files are uploaded.
-3. Give the project the key: `npx vercel env add STRIPE_SECRET_KEY production`, then deploy with
-   `npx vercel --prod`.
-4. Put the function's address in `ORDER.endpoint` (`js/site-config.js`), e.g.
-   `https://<project>.vercel.app/api/checkout`, and push. The order page switches from
-   "Text my order" to "Continue to payment" and shows the tip and email fields.
-5. Pay with the test card `4242 4242 4242 4242` (any future date, any CVC). When it works, replace
-   the key with the `sk_live_…` one (`vercel env rm` / `env add`, then `vercel --prod` again).
+**Turning it on — sandbox first**
+1. Make a developer account at https://sandbox.dev.clover.com/developers and open its test merchant.
+2. In the test merchant's dashboard copy the merchant ID (the 13 characters after `/m/` in the URL)
+   and create an Ecommerce API token (Settings → Ecommerce → API Tokens); copy its **private** key.
+3. Add them to the Vercel project (Settings → Environment Variables, or `npx vercel env add …`):
+   `CLOVER_ENV=sandbox`, `CLOVER_MERCHANT_ID`, `CLOVER_PRIVATE_KEY`. Redeploy.
+4. In the same dashboard under Hosted Checkout, set the webhook URL to
+   `https://www.nomadmanti.com/api/clover-webhook` and copy the signing secret into
+   `CLOVER_WEBHOOK_SECRET`. Redeploy.
+5. Put `https://www.nomadmanti.com/api/checkout` in `ORDER.endpoint` (`js/site-config.js`) and push.
+   The order page switches from "Text my order" to "Continue to payment" and shows tip and email.
+   (Do this on a preview deployment first if guests shouldn't see sandbox checkout.)
+6. Pay with Clover's test card `4005 5717 0222 2222` (any future date, any CVC), then check the order
+   in the test merchant's Orders and the webhook line in Vercel → Logs.
+7. For real payments: the restaurant's live Clover account must have e-commerce (card-not-present)
+   enabled. Make a live token and webhook there, set `CLOVER_ENV=production` and the live
+   merchant ID, key and secret, and redeploy.
 
-Redeploy (`npx vercel --prod`) whenever the menu, prices, tax rate or hours change — or connect the
-GitHub repo to the Vercel project so every push does it.
+Redeploy whenever the menu, prices, tax rate or hours change (pushes to `main` do this on Vercel).
 
-**How the kitchen sees an order.** Each payment in Stripe carries the order: the line items, and a
-description like `Pickup order NM-1A2B3C4D — 7:00 PM — Name, phone` plus notes in the metadata.
-Turn on "Successful payments" emails in Stripe (Settings → Communication preferences) and install
-the Stripe Dashboard phone app for a push notification per order. To send guests a receipt, enable
-it in Stripe under Settings → Customer emails. There is no webhook, printer or POS ticket yet.
+**How the kitchen sees an order.** In Clover: the line items with sales tax, a "Tip" line if any,
+and on the first item a note like `Order NM-1A2B3C4D · Pickup 7:00 PM · Name, phone · notes`. The
+guest's name, phone and email are on the order's customer.
 
 **Limits to know**
-- Tax is added as a plain "Sales tax" line at `ORDER.taxRate`; it is not Stripe Tax and nothing is filed for you.
-- Inside the iPhone/Android app, Stripe's page opens in the phone's browser and the guest finishes
+- Clover calculates the tax itself from `ORDER.taxRate`; its rounding is per line, so it can differ
+  from the page's estimate by a cent.
+- The tip is sent as an untaxed "Tip" line item, so Clover reports it as a sale, not as a tip.
+- Online items are free-text lines, not linked to Clover inventory, so they don't decrease stock and
+  show under their website names in reports.
+- Inside the iPhone/Android app, Clover's page opens in the phone's browser and the guest finishes
   on the website; the cart inside the app is not cleared.
-- Other env vars: `SITE_URL` (default `https://www.nomadmanti.com`) and `ALLOWED_ORIGINS`
-  (extra comma-separated origins, e.g. a test server).
+- Other env vars: `SITE_URL` (default `https://www.nomadmanti.com`), `ALLOWED_ORIGINS` (extra
+  comma-separated origins, e.g. a test server) and `CLOVER_API_BASE` (live API host outside North
+  America, e.g. `https://api.eu.clover.com`).
 
 **The contract** (only matters if the backend is ever replaced)
 

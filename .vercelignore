@@ -1,2 +1,2 @@
-# Vercel serves the whole site plus api/checkout.js. Leave out only the native app projects.
+# Vercel serves the whole site plus the api/ functions. Leave out only the native app projects.
 /app

@@ -1,4 +1,4 @@
-// Payment backend for order.html — a Vercel Function that turns an order into a Stripe Checkout page.
+// Payment backend for order.html — a Vercel Function that turns an order into a Clover Hosted Checkout page.
 //
 //   POST /api/checkout   body: the order JSON built by js/order.js (contract in README.md)
 //   → 200 { orderId, checkoutUrl }     the page then sends the guest to checkoutUrl
@@ -7,7 +7,10 @@
 // the same menu and settings files the site uses, so editing js/menu-data.js changes both.
 //
 // Environment variables (set in Vercel, never in this repo):
-//   STRIPE_SECRET_KEY   sk_test_… while testing, sk_live_… for real payments   (required)
+//   CLOVER_MERCHANT_ID  the 13-character merchant ID                                  (required)
+//   CLOVER_PRIVATE_KEY  the Ecommerce API private token from the Clover dashboard     (required)
+//   CLOVER_ENV          'sandbox' (default) or 'production'
+//   CLOVER_API_BASE     production API host outside North America, e.g. https://api.eu.clover.com
 //   SITE_URL            where guests return after paying; default https://www.nomadmanti.com
 //   ALLOWED_ORIGINS     extra comma-separated origins allowed to call this, e.g. a test server
 
@@ -24,7 +27,9 @@ const ORIGINS = new Set([
   ...(process.env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean),
 ]);
 const ITEMS = new Map(MENU.flatMap((cat) => cat.items).map((item) => [item.id, item]));
-const STRIPE_LOCALES = { en: 'en', ru: 'ru', es: 'es' }; // Stripe has no Kyrgyz; it falls back to the browser's language
+const CLOVER_API = process.env.CLOVER_ENV === 'production'
+  ? (process.env.CLOVER_API_BASE || 'https://api.clover.com') // North America; EU is https://api.eu.clover.com
+  : 'https://apisandbox.dev.clover.com';
 const GRACE_MINUTES = 10; // a guest may sit on the form for a while before pressing pay
 
 const cents = (price) => Math.round(price * 100);
@@ -98,47 +103,46 @@ function price(order) {
   };
 }
 
-// The kitchen reads this in the Stripe dashboard, the payment email and the Stripe phone app.
-function stripeParams(o, orderId, returnTo) {
-  const p = new URLSearchParams();
-  const lineItems = [
-    ...o.lines.map((l) => ({ name: l.name, amount: l.unit, qty: l.qty })),
-    { name: `Sales tax (${+(ORDER.taxRate * 100).toFixed(3)}%)`, amount: o.tax, qty: 1 },
-    ...(o.tip ? [{ name: 'Tip', amount: o.tip, qty: 1 }] : []),
-  ].filter((l) => l.amount > 0);
-  lineItems.forEach((l, i) => {
-    p.set(`line_items[${i}][quantity]`, l.qty);
-    p.set(`line_items[${i}][price_data][currency]`, 'usd');
-    p.set(`line_items[${i}][price_data][unit_amount]`, l.amount);
-    p.set(`line_items[${i}][price_data][product_data][name]`, l.name);
-  });
-  const meta = {
-    order_id: orderId,
-    pickup: o.pickup,
-    customer_name: o.name,
-    customer_phone: o.phone,
-    items: o.lines.map((l) => `${l.qty} x ${l.name}`).join('; ').slice(0, 500),
-    ...(o.notes ? { notes: o.notes } : {}),
+// The kitchen sees this as a normal order in Clover (Orders app and devices), with the pickup time,
+// order number and notes on the first line and the guest's name and phone on the customer.
+function cloverBody(o, orderId, returnTo) {
+  const taxRates = o.tax ? [{ name: 'Sales tax', rate: Math.round(ORDER.taxRate * 1e7) }] : []; // Clover: 100% = 10,000,000
+  const header = [`Order ${orderId}`, `Pickup ${o.pickup}`, `${o.name}, ${o.phone}`, o.notes].filter(Boolean).join(' · ');
+  const lineItems = o.lines.map((l, i) => ({
+    name: l.name.slice(0, 127),
+    price: l.unit,
+    unitQty: l.qty,
+    ...(i === 0 ? { note: header.slice(0, 255) } : {}),
+    ...(taxRates.length ? { taxRates } : {}),
+  }));
+  if (o.tip) lineItems.push({ name: 'Tip', price: o.tip, unitQty: 1 }); // untaxed
+  const [firstName, ...rest] = o.name.split(' ');
+  return {
+    customer: {
+      firstName: firstName.slice(0, 40),
+      ...(rest.length ? { lastName: rest.join(' ').slice(0, 40) } : {}),
+      phoneNumber: o.phone,
+      ...(o.email ? { email: o.email } : {}),
+    },
+    shoppingCart: { lineItems },
+    redirectUrls: {
+      success: `${returnTo}?status=success&order=${orderId}`,
+      failure: `${returnTo}?status=cancelled`,
+      cancel: `${returnTo}?status=cancelled`,
+    },
   };
-  p.set('mode', 'payment');
-  p.set('client_reference_id', orderId);
-  p.set('success_url', `${returnTo}?status=success&order=${orderId}`);
-  p.set('cancel_url', `${returnTo}?status=cancelled`);
-  p.set('expires_at', Math.floor(Date.now() / 1000) + 31 * 60); // Stripe's minimum is 30 minutes
-  p.set('payment_intent_data[description]', `Pickup order ${orderId} — ${o.pickup} — ${o.name}, ${o.phone}`);
-  for (const [k, v] of Object.entries(meta)) {
-    p.set(`metadata[${k}]`, v);
-    p.set(`payment_intent_data[metadata][${k}]`, v);
-  }
-  if (o.email) p.set('customer_email', o.email);
-  if (STRIPE_LOCALES[o.lang]) p.set('locale', STRIPE_LOCALES[o.lang]);
-  return p;
+}
+
+// Our own domains and apps, plus the page's own host (so Vercel preview deployments work too).
+function allowed(request) {
+  const origin = request.headers.get('origin');
+  return ORIGINS.has(origin) || origin === new URL(request.url).origin;
 }
 
 function cors(request) {
   const origin = request.headers.get('origin');
   return {
-    ...(ORIGINS.has(origin) ? { 'Access-Control-Allow-Origin': origin } : {}),
+    ...(allowed(request) ? { 'Access-Control-Allow-Origin': origin } : {}),
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Max-Age': '86400',
@@ -153,9 +157,9 @@ export function OPTIONS(request) {
 
 export async function POST(request) {
   const origin = request.headers.get('origin');
-  if (!ORIGINS.has(origin)) return json(request, 403, { error: 'origin_not_allowed' });
-  if (!process.env.STRIPE_SECRET_KEY) {
-    console.error('STRIPE_SECRET_KEY is not set');
+  if (!allowed(request)) return json(request, 403, { error: 'origin_not_allowed' });
+  if (!process.env.CLOVER_PRIVATE_KEY || !process.env.CLOVER_MERCHANT_ID) {
+    console.error('CLOVER_PRIVATE_KEY or CLOVER_MERCHANT_ID is not set');
     return json(request, 500, { error: 'not_configured' });
   }
 
@@ -169,22 +173,25 @@ export async function POST(request) {
     return json(request, 400, { error: 'bad_request' });
   }
 
-  // The apps can't be returned to from Stripe's page, so their guests land on the website instead.
+  // The apps can't be returned to from Clover's page, so their guests land on the website instead.
   const returnTo = `${origin.startsWith('http') && !origin.endsWith('//localhost') ? origin : SITE_URL}/order.html`;
   const orderId = `NM-${randomBytes(4).toString('hex').toUpperCase()}`;
 
-  const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+  const res = await fetch(`${CLOVER_API}/invoicingcheckoutservice/v1/checkouts`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${process.env.CLOVER_PRIVATE_KEY}`,
+      'X-Clover-Merchant-Id': process.env.CLOVER_MERCHANT_ID,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
-    body: stripeParams(priced, orderId, returnTo),
+    body: JSON.stringify(cloverBody(priced, orderId, returnTo)),
   });
   const session = await res.json().catch(() => ({}));
-  if (!res.ok || !session.url) {
-    console.error('Stripe refused the session', res.status, session.error?.message);
+  if (!res.ok || !session.href) {
+    console.error('Clover refused the checkout', res.status, JSON.stringify(session).slice(0, 500));
     return json(request, 502, { error: 'payment_unavailable' });
   }
-  return json(request, 200, { orderId, checkoutUrl: session.url });
+  console.log('Clover checkout opened', orderId, session.checkoutSessionId);
+  return json(request, 200, { orderId, checkoutUrl: session.href });
 }

@@ -11,9 +11,9 @@ export const LINKS = {
 
 // Online ordering (order.html).
 export const ORDER = {
-  // PAYMENT: the address of the Stripe backend (api/checkout.js, deployed on Vercel — steps in
+  // PAYMENT: the address of the Clover payment backend (api/checkout.js, deployed on Vercel — steps in
   // README.md). While this is null the page takes pay-at-pickup orders by text message instead.
-  endpoint: null, // e.g. 'https://nomad-manti.vercel.app/api/checkout'
+  endpoint: '/api/checkout', // TEST BRANCH: the apps need the full https://www.nomadmanti.com/api/checkout before merging
 
   // Used only while `endpoint` is null: the guest's phone opens a pre-written text to this
   // number. Set to null to show "call to order" instead.
