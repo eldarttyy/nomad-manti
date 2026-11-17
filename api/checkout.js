@@ -177,16 +177,31 @@ export async function POST(request) {
   const returnTo = `${origin.startsWith('http') && !origin.endsWith('//localhost') ? origin : SITE_URL}/order.html`;
   const orderId = `NM-${randomBytes(4).toString('hex').toUpperCase()}`;
 
-  const res = await fetch(`${CLOVER_API}/invoicingcheckoutservice/v1/checkouts`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${process.env.CLOVER_PRIVATE_KEY}`,
-      'X-Clover-Merchant-Id': process.env.CLOVER_MERCHANT_ID,
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(cloverBody(priced, orderId, returnTo)),
-  });
+  const key = process.env.CLOVER_PRIVATE_KEY.trim();
+  const merchant = process.env.CLOVER_MERCHANT_ID.trim();
+  // A key pasted with extra text (spaces, line breaks, icon labels) would otherwise crash fetch
+  // with an error message that contains the key itself — never let it reach the logs.
+  if (!/^[\w-]+$/.test(key) || !/^[A-Z0-9]+$/i.test(merchant)) {
+    console.error('CLOVER_PRIVATE_KEY or CLOVER_MERCHANT_ID has unexpected characters; re-paste only the value');
+    return json(request, 500, { error: 'not_configured' });
+  }
+
+  let res;
+  try {
+    res = await fetch(`${CLOVER_API}/invoicingcheckoutservice/v1/checkouts`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${key}`,
+        'X-Clover-Merchant-Id': merchant,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(cloverBody(priced, orderId, returnTo)),
+    });
+  } catch (err) {
+    console.error('Could not reach Clover:', err.name, err.cause?.code ?? '');
+    return json(request, 502, { error: 'payment_unavailable' });
+  }
   const session = await res.json().catch(() => ({}));
   if (!res.ok || !session.href) {
     console.error('Clover refused the checkout', res.status, JSON.stringify(session).slice(0, 500));
