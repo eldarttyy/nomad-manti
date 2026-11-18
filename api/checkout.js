@@ -27,7 +27,7 @@ const ORIGINS = new Set([
   ...(process.env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean),
 ]);
 const ITEMS = new Map(MENU.flatMap((cat) => cat.items).map((item) => [item.id, item]));
-const CLOVER_API = process.env.CLOVER_ENV === 'production'
+const CLOVER_API = (process.env.CLOVER_ENV || '').trim().toLowerCase() === 'production'
   ? (process.env.CLOVER_API_BASE || 'https://api.clover.com') // North America; EU is https://api.eu.clover.com
   : 'https://apisandbox.dev.clover.com';
 const GRACE_MINUTES = 10; // a guest may sit on the form for a while before pressing pay
@@ -204,7 +204,9 @@ export async function POST(request) {
   }
   const session = await res.json().catch(() => ({}));
   if (!res.ok || !session.href) {
-    console.error('Clover refused the checkout', res.status, JSON.stringify(session).slice(0, 500));
+    // The key is never logged; the host and the merchant ID's last 4 characters show what was used.
+    console.error('Clover refused the checkout', res.status, CLOVER_API, `merchant …${merchant.slice(-4)}`,
+      `key length ${key.length}`, JSON.stringify(session).slice(0, 500));
     return json(request, 502, { error: 'payment_unavailable' });
   }
   console.log('Clover checkout opened', orderId, session.checkoutSessionId);
