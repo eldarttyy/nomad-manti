@@ -367,6 +367,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .menu__order .btn:hover { background: var(--felt-deep); }
 
 /* =========================================================
+   CATERING TEASER (full page: catering.html / css/catering.css)
+   ========================================================= */
+.cater-teaser { background: var(--night-2); padding-block: clamp(80px, 11vw, 150px); }
+.cater-teaser__grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(40px, 6vw, 100px); align-items: center; }
+.cater-teaser .frame { aspect-ratio: 5 / 4; }
+.cater-teaser p:not(.eyebrow) { color: rgba(243,234,219,.82); max-width: 500px; margin: 0 0 28px; }
+
+@media (max-width: 860px) { .cater-teaser__grid { grid-template-columns: 1fr; } }
+
+/* =========================================================
    GALLERY
    ========================================================= */
 .gallery { padding-top: clamp(90px, 12vw, 160px); overflow: hidden; }
@@ -465,6 +475,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .facts .link-arrow { font-family: var(--sans); font-size: 11px; margin-top: 12px; }
 .badges { list-style: none; padding: 0; margin: 0; display: flex; gap: 10px; flex-wrap: wrap; }
 .badges li { border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+.badges a { text-decoration: none; color: var(--saffron-soft); }
+.badges a:hover { color: var(--cream); }
 .visit__map { min-height: 420px; }
 .visit__map iframe { width: 100%; height: 100%; min-height: 420px; border: 0; filter: grayscale(.4) sepia(.25) contrast(1.05); }
 

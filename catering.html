@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title data-i18n="c.meta.title">Catering — Nomad Manti · Seattle</title>
+  <meta name="description" data-i18n-attr="content:c.meta.desc" content="Halal Kyrgyz &amp; Central Asian catering in Seattle: a kazan of plov, trays of hand-folded manti, lamb shashlik and lagman for offices, weddings, Eid, Nooruz and family gatherings.">
+  <meta name="theme-color" content="#14100d">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/app/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Nomad Manti">
+  <link rel="canonical" href="https://www.nomadmanti.com/catering.html">
+  <meta property="og:title" content="Catering — Nomad Manti · Seattle">
+  <meta property="og:description" content="A kazan of plov, trays of manti and lamb shashlik for your next gathering. 100% halal.">
+  <meta property="og:image" content="https://www.nomadmanti.com/assets/photos/dastorkon-spread.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&text=%D2%A2%D2%A3%D3%A8%D3%A9%D2%AE%D2%AF&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/order.css">
+  <link rel="stylesheet" href="css/catering.css">
+  <script>
+    document.documentElement.classList.add('js');
+    if (window.Capacitor || navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches)) document.documentElement.classList.add('is-app');
+    // Same language pick as index.html: ?lang= → saved choice → browser languages → English
+    (function () {
+      var langs = ['en', 'ru', 'ky', 'es'], source = 'en', l, d = document.documentElement;
+      try { l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('nm-lang'); } catch (e) {}
+      if (langs.indexOf(l) < 0) {
+        l = source;
+        var prefs = navigator.languages || [navigator.language];
+        for (var i = 0; i < prefs.length; i++) {
+          var code = String(prefs[i]).toLowerCase().split('-')[0];
+          if (langs.indexOf(code) > -1) { l = code; break; }
+        }
+      }
+      d.lang = l;
+      if (l !== source) {
+        d.classList.add('i18n-wait');
+        setTimeout(function () { d.classList.remove('i18n-wait'); }, 2500);
+      }
+    })();
+  </script>
+</head>
+<body class="catering-page">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="tunduk" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="3"/>
+        <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M40 22 Q50 50 40 78 M50 20 V80 M60 22 Q50 50 60 78" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M22 40 Q50 50 78 40 M20 50 H80 M22 60 Q50 50 78 60" fill="none" stroke="currentColor" stroke-width="2.4"/>
+      </symbol>
+      <symbol id="horn" viewBox="0 0 120 120">
+        <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+          <path id="h1" d="M60 60 C60 38 46 26 34 30 C24 34 26 48 36 46 C42 45 42 38 38 37"/>
+          <use href="#h1" transform="matrix(-1 0 0 1 120 0)"/>
+          <use href="#h1" transform="matrix(1 0 0 -1 0 120)"/>
+          <use href="#h1" transform="matrix(-1 0 0 -1 120 120)"/>
+        </g>
+        <path d="M60 48 L72 60 L60 72 L48 60 Z" fill="currentColor"/>
+      </symbol>
+      <pattern id="shyrdak" width="120" height="120" patternUnits="userSpaceOnUse">
+        <use href="#horn" width="120" height="120" style="color:#a3301f"/>
+      </pattern>
+      <pattern id="shyrdak-gold" width="120" height="120" patternUnits="userSpaceOnUse">
+        <use href="#horn" width="120" height="120" style="color:rgba(233,168,60,.07)"/>
+      </pattern>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="nav o-nav">
+    <a href="index.html" class="nav__brand" aria-label="Nomad Manti — home" data-i18n-attr="aria-label:nav.home">
+      <svg class="nav__mark"><use href="#tunduk"/></svg>
+      <span class="nav__name">Nomad <em>Manti</em></span>
+    </a>
+    <a href="index.html" class="o-nav__back" data-i18n="o.back">Back to the site</a>
+    <label class="lang" data-lang-picker>
+      <span class="lang__code" aria-hidden="true">EN</span>
+      <select aria-label="Language" data-i18n-attr="aria-label:lang.label"></select>
+    </label>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HERO ============ -->
+    <section class="c-hero">
+      <img class="c-hero__img" src="assets/photos/dastorkon-spread.jpg" alt="A table spread with plov, manti, shashlik on flatbread and lagman" data-i18n-attr="alt:alt.spread">
+      <div class="c-hero__shade"></div>
+      <div class="c-hero__content container">
+        <p class="eyebrow" data-i18n="c.eyebrow">Catering · 100% halal</p>
+        <h1 class="display" data-i18n="c.title">A dastorkon for <em>every gathering</em></h1>
+        <p class="c-hero__lede" data-i18n="c.lede">A kazan of plov, trays of hand-folded manti and lamb straight off the charcoal. We'll cook the Kyrgyz feast, and you can enjoy your guests.</p>
+        <div class="hero__ctas">
+          <a href="#plan" class="btn btn--solid" data-i18n="c.cta.plan">Plan your event</a>
+          <a href="tel:+14255186966" class="btn btn--ghost" data-i18n="final.call">Call (425) 518-6966</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="pattern-band pattern-band--thin" aria-hidden="true"><svg><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg></div>
+
+    <!-- ============ OCCASIONS ============ -->
+    <section class="c-occasions container" aria-labelledby="occTitle">
+      <p class="eyebrow" data-i18n="c.occ.eyebrow">01 — For the occasion</p>
+      <h2 class="display" id="occTitle" data-i18n="c.occ.title">Big table, <em>small fuss</em></h2>
+      <ul class="c-occ">
+        <li><strong data-i18n="c.occ.office">Office lunches</strong><span data-i18n="c.occ.office.d">Team meetings, client days and Friday treats that beat another sandwich platter.</span></li>
+        <li><strong data-i18n="c.occ.toi">Weddings &amp; toi</strong><span data-i18n="c.occ.toi.d">Plov for a hundred, cooked the way it is at every Kyrgyz celebration.</span></li>
+        <li><strong data-i18n="c.occ.eid">Eid, Ramadan &amp; Nooruz</strong><span data-i18n="c.occ.eid.d">Halal through and through, ready for iftar or the holiday table.</span></li>
+        <li><strong data-i18n="c.occ.family">Birthdays &amp; family</strong><span data-i18n="c.occ.family.d">Anniversaries, big family dinners and memorial meals.</span></li>
+        <li><strong data-i18n="c.occ.community">Community &amp; mosque</strong><span data-i18n="c.occ.community.d">Gatherings, fundraisers and student events, served from big trays.</span></li>
+      </ul>
+    </section>
+
+    <!-- ============ TRAYS ============ -->
+    <section class="c-trays" aria-labelledby="traysTitle">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow" data-i18n="c.trays.eyebrow">02 — What we bring</p>
+          <h2 class="display" id="traysTitle" data-i18n="c.trays.title">Dishes made <em>for sharing</em></h2>
+          <p class="section-head__note" data-i18n="c.trays.note">Catering is priced by tray and number of guests. Tell us about your event and we'll send a menu and a quote, usually the same day.</p>
+        </header>
+
+        <div class="c-tray-grid">
+          <article class="c-tray c-tray--feature" data-tray="plov">
+            <div class="frame"><img src="assets/photos/plov-achichuk.jpg" alt="Plov with a boiled egg and achichuk tomato salad" data-i18n-attr="alt:gallery.alt5" loading="lazy"></div>
+            <div class="c-tray__body">
+              <h3><span data-i18n="c.t.plov">Kazan plov</span> <i lang="ky">Палоо</i></h3>
+              <p data-i18n="c.t.plov.d">The heart of every Kyrgyz celebration: rice slow-cooked in the kazan with beef, sweet carrots, garlic and cumin, with boiled eggs and achichuk salad.</p>
+              <p class="c-tray__meta" data-tray-meta></p>
+            </div>
+          </article>
+          <article class="c-tray" data-tray="manti">
+            <div class="frame"><img src="assets/photos/manti-chili.jpg" alt="Manti around a bowl of house chili sauce" data-i18n-attr="alt:gallery.alt2" loading="lazy"></div>
+            <div class="c-tray__body">
+              <h3><span data-i18n="c.t.manti">Manti trays</span> <i lang="ky">Манты</i></h3>
+              <p data-i18n="c.t.manti.d">Hand-folded lamb and onion dumplings, steamed and packed hot, with our house chili.</p>
+              <p class="c-tray__meta" data-tray-meta></p>
+            </div>
+          </article>
+          <article class="c-tray" data-tray="shashlik">
+            <div class="frame"><img src="assets/photos/shashlik-grill.jpg" alt="Lamb shashlik skewers over an open grill" data-i18n-attr="alt:alt.grill" loading="lazy"></div>
+            <div class="c-tray__body">
+              <h3><span data-i18n="c.t.shashlik">Shashlik platters</span> <i lang="ky">Шашлык</i></h3>
+              <p data-i18n="c.t.shashlik.d">Marinated lamb and chicken skewers grilled over charcoal, with onions, herbs and bread.</p>
+              <p class="c-tray__meta" data-tray-meta></p>
+            </div>
+          </article>
+          <article class="c-tray" data-tray="lagman">
+            <div class="frame"><img src="assets/photos/lagman-for-two.jpg" alt="Two plates of lagman with tea" data-i18n-attr="alt:gallery.alt3" loading="lazy"></div>
+            <div class="c-tray__body">
+              <h3><span data-i18n="c.t.lagman">Lagman</span> <i lang="ky">Лагман</i></h3>
+              <p data-i18n="c.t.lagman.d">Homemade pulled noodles with beef and vegetables. Boso is wok-tossed, gyuro comes with a rich gravy.</p>
+              <p class="c-tray__meta" data-tray-meta></p>
+            </div>
+          </article>
+          <article class="c-tray" data-tray="samsa">
+            <!-- no samsa photo yet: a felt tile until there is one (then use an <img> like the others) -->
+            <div class="frame c-tray__felt" aria-hidden="true"><svg><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg><svg class="c-tray__mark"><use href="#tunduk"/></svg></div>
+            <div class="c-tray__body">
+              <h3><span data-i18n="c.t.samsa">Samsa &amp; salads</span> <i lang="ky">Самса</i></h3>
+              <p data-i18n="c.t.samsa.d">Flaky baked samsa with lamb or chicken and cheese, plus fresh achichuk and garden salads to round out the table.</p>
+              <p class="c-tray__meta" data-tray-meta></p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="c-steps container" aria-labelledby="stepsTitle">
+      <p class="eyebrow" data-i18n="c.steps.eyebrow">03 — How it works</p>
+      <h2 class="display" id="stepsTitle" data-i18n="c.steps.title">Three steps <em>to the table</em></h2>
+      <ol class="c-step-list">
+        <li><span class="c-step__num">01</span><h3 data-i18n="c.s1">Tell us about it</h3><p data-i18n="c.s1.d">The date, how many guests, and what you're celebrating. The form below takes a minute.</p></li>
+        <li><span class="c-step__num">02</span><h3 data-i18n="c.s2">Get a menu &amp; quote</h3><p data-i18n="c.s2.d">We call or text you back with a suggested menu and a price, and adjust it until it's right.</p></li>
+        <li><span class="c-step__num">03</span><h3 data-i18n="c.s3">We cook, you host</h3><p data-i18n="c.s3.d">Pick everything up hot from NE 65th St, or ask us about delivery to your venue.</p></li>
+      </ol>
+      <p class="c-terms" id="terms" hidden></p>
+    </section>
+
+    <!-- ============ INQUIRY ============ -->
+    <section class="c-plan" id="plan" aria-labelledby="planTitle">
+      <svg class="c-plan__pattern" aria-hidden="true"><rect width="100%" height="100%" fill="url(#shyrdak-gold)"/></svg>
+      <div class="c-plan__grid container">
+        <div class="c-plan__intro">
+          <p class="eyebrow" data-i18n="c.plan.eyebrow">04 — Plan your event</p>
+          <h2 class="display" id="planTitle" data-i18n="c.plan.title">Tell us about <em>your table</em></h2>
+          <p data-i18n="c.plan.lede">Fill this in and we'll put your details into a text message to the restaurant. Nothing is booked or charged until we've talked.</p>
+          <p class="c-plan__call"><span data-i18n="c.plan.rather">Rather talk?</span> <a href="tel:+14255186966">(425) 518-6966</a></p>
+          <figure class="c-plan__photo frame"><img src="assets/photos/storefront-sunny.jpg" alt="The colourful storefront on a sunny day" data-i18n-attr="alt:gallery.alt6" loading="lazy"></figure>
+        </div>
+
+        <form class="o-form c-form" id="cateringForm" novalidate>
+          <div class="c-form__row">
+            <label class="o-field"><span data-i18n="o.f.name">Name</span>
+              <input name="name" type="text" autocomplete="name" maxlength="60" required></label>
+            <label class="o-field"><span data-i18n="o.f.phone">Phone</span>
+              <input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" required pattern="[\d\s()+.\-]*(\d[\s()+.\-]*){10,}"></label>
+          </div>
+          <label class="o-field"><span data-i18n="c.f.email">Email (optional)</span>
+            <input name="email" type="email" autocomplete="email" maxlength="120"></label>
+          <div class="c-form__row">
+            <label class="o-field"><span data-i18n="c.f.date">Event date</span>
+              <input name="date" id="cDate" type="date" required></label>
+            <label class="o-field"><span data-i18n="c.f.time">Time</span>
+              <input name="time" type="time" step="900"></label>
+          </div>
+          <div class="c-form__row">
+            <label class="o-field"><span data-i18n="c.f.guests">Number of guests</span>
+              <input name="guests" type="number" inputmode="numeric" min="1" max="2000" required></label>
+            <label class="o-field"><span data-i18n="c.f.occasion">Occasion</span>
+              <select name="occasion">
+                <option value="Office lunch" data-i18n="c.occ.office">Office lunches</option>
+                <option value="Wedding / toi" data-i18n="c.occ.toi">Weddings &amp; toi</option>
+                <option value="Eid / Ramadan / Nooruz" data-i18n="c.occ.eid">Eid, Ramadan &amp; Nooruz</option>
+                <option value="Birthday / family" data-i18n="c.occ.family">Birthdays &amp; family</option>
+                <option value="Community / mosque" data-i18n="c.occ.community">Community &amp; mosque</option>
+                <option value="Other" data-i18n="c.f.other">Something else</option>
+              </select></label>
+          </div>
+          <fieldset class="c-choices">
+            <legend data-i18n="c.f.service">Pickup or delivery</legend>
+            <label><input type="radio" name="service" value="Pickup" checked> <span data-i18n="c.f.pickup">Pickup</span></label>
+            <label><input type="radio" name="service" value="Delivery"> <span data-i18n="c.f.delivery">Delivery</span></label>
+            <label><input type="radio" name="service" value="Not sure"> <span data-i18n="c.f.unsure">Not sure yet</span></label>
+          </fieldset>
+          <label class="o-field" data-address hidden><span data-i18n="c.f.address">Delivery address</span>
+            <input name="address" type="text" autocomplete="street-address" maxlength="160"></label>
+          <fieldset class="c-choices c-choices--dishes">
+            <legend data-i18n="c.f.dishes">Dishes you'd like</legend>
+            <label><input type="checkbox" name="dishes" value="Plov"> <span data-i18n="c.t.plov">Kazan plov</span></label>
+            <label><input type="checkbox" name="dishes" value="Manti"> <span data-i18n="c.t.manti">Manti trays</span></label>
+            <label><input type="checkbox" name="dishes" value="Shashlik"> <span data-i18n="c.t.shashlik">Shashlik platters</span></label>
+            <label><input type="checkbox" name="dishes" value="Lagman"> <span data-i18n="c.t.lagman">Lagman</span></label>
+            <label><input type="checkbox" name="dishes" value="Samsa & salads"> <span data-i18n="c.t.samsa">Samsa &amp; salads</span></label>
+            <label><input type="checkbox" name="dishes" value="Help me choose"> <span data-i18n="c.f.help">Help me choose</span></label>
+          </fieldset>
+          <label class="o-field"><span data-i18n="c.f.notes">Anything else? Budget, allergies, setup…</span>
+            <textarea name="notes" maxlength="600" rows="3"></textarea></label>
+
+          <p class="o-form__error" id="cError" role="alert" hidden></p>
+          <button class="btn btn--solid o-submit" type="submit" data-i18n="c.f.submit">Prepare my request</button>
+          <p class="o-form__fine" data-i18n="c.f.fine">On a phone this opens a text to (425) 518-6966 with everything filled in. On a computer you can copy it, or just call us.</p>
+
+          <div class="c-send" id="cSend" hidden>
+            <h3 data-i18n="c.send.title">Your request is ready</h3>
+            <pre class="c-send__msg" id="cMsg"></pre>
+            <div class="c-send__actions">
+              <a class="btn btn--solid" id="cSms" data-i18n="c.send.sms">Send by text</a>
+              <a class="btn btn--ghost" id="cMail" hidden data-i18n="c.send.mail">Send by email</a>
+              <button class="btn btn--ghost" type="button" id="cCopy" data-i18n="c.send.copy">Copy message</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="pattern-band pattern-band--thin" aria-hidden="true"><svg><rect width="100%" height="100%" fill="url(#shyrdak)"/></svg></div>
+    <div class="footer__grid container">
+      <div>
+        <a href="index.html" class="nav__brand"><svg class="nav__mark"><use href="#tunduk"/></svg><span class="nav__name">Nomad <em>Manti</em></span></a>
+        <p class="footer__tag" data-i18n="footer.tag">Family-run Kyrgyz &amp; Central Asian kitchen.<br>Ак жол — may your road be white.</p>
+      </div>
+      <div><h4 data-i18n="footer.find">Find us</h4><p>800 NE 65th St<br>Seattle, WA 98115</p></div>
+      <div><h4 data-i18n="footer.contact">Contact</h4><p><a href="tel:+14255186966">(425) 518-6966</a><br><a href="https://www.instagram.com/nomad.manti/" target="_blank" rel="noopener">Instagram</a></p></div>
+      <div><h4 data-i18n="footer.explore">Explore</h4><p><a href="index.html#story" data-i18n="nav.story">Our Story</a><br><a href="index.html#menu" data-i18n="nav.menu">Menu</a><br><a href="order.html" data-i18n="nav.order">Order online</a><br><a href="index.html#visit" data-i18n="visit.hours">Hours</a></p></div>
+    </div>
+    <p class="footer__legal container">© <span id="year">2026</span> Nomad Manti</p>
+  </footer>
+
+  <script type="module" src="js/catering.js"></script>
+</body>
+</html>

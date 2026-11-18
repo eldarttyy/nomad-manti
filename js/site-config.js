@@ -7,6 +7,29 @@ export const LINKS = {
   googleReview: 'https://search.google.com/local/writereview?placeid=ChIJS_91cwAVkFQRP54GlcYibS0',
   doordash: null, // e.g. 'https://www.doordash.com/store/nomad-manti-seattle-12345678/'
   ubereats: null, // e.g. 'https://www.ubereats.com/store/nomad-manti/AbCdEf...'
+
+  // CLOVER ONLINE ORDERING: once Restaurant Growth is active on the Nomad Manti account, paste
+  // the Clover ordering page here. Every "Order online" button on the site then goes there
+  // instead of order.html (orders land in the POS and print in the kitchen).
+  onlineOrdering: null, // e.g. 'https://www.clover.com/online-ordering/nomad-manti-seattle'
+};
+
+// Catering page (catering.html). Anything left null is simply not shown — fill these in once
+// the restaurant has decided them; nothing on the page invents a price or a rule.
+export const CATERING = {
+  sms: '+14255186966',  // inquiry form opens a text to this number
+  email: null,          // e.g. 'catering@nomadmanti.com' — adds a "Send by email" button
+  minNoticeDays: null,  // e.g. 3 — earliest selectable event date, and shown under "How it works"
+  minGuests: null,      // e.g. 10
+  terms: null,          // one line of extra conditions, e.g. 'Delivery within 10 miles, $25.'
+  // Shown under each dish on the catering page, e.g. { price: 'from $120', serves: 'serves 10–12' }
+  trays: {
+    plov: null,
+    manti: null,
+    shashlik: null,
+    lagman: null,
+    samsa: null,
+  },
 };
 
 // Online ordering (order.html).

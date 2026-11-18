@@ -2,6 +2,7 @@
 // iOS app shell in app/. The inline script in <head> has already put .is-app on <html>;
 // this adds the bottom tab bar and, on the web, the offline cache (sw.js).
 import { t, onLangChange } from './i18n.js';
+import { LINKS } from './site-config.js';
 
 export const IS_APP = document.documentElement.classList.contains('is-app');
 const onOrderPage = document.body.classList.contains('order-page');
@@ -12,10 +13,11 @@ const ICONS = {
   visit: '<path d="M12 21s-6.5-5.6-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.3"/>',
   profile: '<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.6-3.6 3.4-5.5 7-5.5s6.4 1.9 7 5.5"/>',
 };
+const onHome = Boolean(document.getElementById('top')); // index.html; other pages link back to it
 const TABS = [
-  { id: 'home', href: onOrderPage ? 'index.html' : '#top' },
-  { id: 'order', href: 'order.html' },
-  { id: 'visit', href: onOrderPage ? 'index.html#visit' : '#visit' },
+  { id: 'home', href: onHome ? '#top' : 'index.html' },
+  { id: 'order', href: LINKS.onlineOrdering || 'order.html' },
+  { id: 'visit', href: onHome ? '#visit' : 'index.html#visit' },
   { id: 'profile', href: onOrderPage ? '#profile' : 'order.html#profile' },
 ];
 
@@ -51,7 +53,7 @@ export function initApp() {
   label();
   onLangChange(label);
 
-  setTab(onOrderPage ? 'order' : 'home');
+  setTab(onOrderPage ? 'order' : onHome ? 'home' : '');
   const visit = document.getElementById('visit');
   if (visit && 'IntersectionObserver' in window) {
     new IntersectionObserver(([en]) => setTab(en.isIntersecting ? 'visit' : 'home'), { rootMargin: '-45% 0px -45% 0px' }).observe(visit);

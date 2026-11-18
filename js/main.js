@@ -12,6 +12,11 @@ document.getElementById('year').textContent = new Date().getFullYear();
 initI18n();
 initApp();
 
+// Clover Online Ordering (LINKS.onlineOrdering): once set, every "Order online" button goes there
+if (LINKS.onlineOrdering) {
+  document.querySelectorAll('a[href="order.html"]').forEach((a) => { a.href = LINKS.onlineOrdering; });
+}
+
 /* ---------------------------------------------------------
    Smooth scroll
    --------------------------------------------------------- */
