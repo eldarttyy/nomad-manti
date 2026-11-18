@@ -19,7 +19,7 @@ export const ORDER = {
   // number. Set to null to show "call to order" instead.
   sms: '+14255186966',
 
-  taxRate: 0.1035,        // Seattle sales tax — confirm the current rate before launch
+  taxRate: 0.1055,        // must equal the sales tax rate set up in Clover (Setup → Taxes & Fees)
   tips: [0, 10, 15, 20],  // tip choices in %, shown once payments are on; [] to hide
 
   timezone: 'America/Los_Angeles',
