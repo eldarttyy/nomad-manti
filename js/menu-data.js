@@ -120,6 +120,17 @@ export const MENU = [
       },
     ],
   },
+  // TEST ONLY (clover-checkout branch) — remove before merging to main.
+  {
+    id: 'test',
+    label: 'Test',
+    items: [
+      {
+        id: 'eldar-test', name: 'Eldar Test', native: null, price: 1, portion: 'test item',
+        desc: 'Payment test — not a real dish. Will be refunded.',
+      },
+    ],
+  },
 ];
 
 export const TAG_LABELS = {
