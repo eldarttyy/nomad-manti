@@ -126,7 +126,7 @@ export const MENU = [
     label: 'Test',
     items: [
       {
-        id: 'eldar-test', name: 'Eldar Test', native: null, price: 1, portion: 'test item',
+        id: 'eldar-test', name: 'Eldar Manty', native: null, price: 1, portion: 'test item',
         desc: 'Payment test — not a real dish. Will be refunded.',
       },
     ],
