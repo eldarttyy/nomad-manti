@@ -7,6 +7,8 @@ export const CONTENT = {
     // categories & tags
     'Dumplings & Pastry': 'Манты и выпечка',
     Noodles: 'Лапша',
+    'Manti & Noodles': 'Манты и лагман',
+    'Kazan & Grill': 'Казан и гриль',
     'Rice & Kazan': 'Рис и казан',
     'From the Grill': 'С мангала',
     'Soups & Salads': 'Супы и салаты',
@@ -59,6 +61,8 @@ export const CONTENT = {
   ky: {
     'Dumplings & Pastry': 'Манты жана бышырылган тамактар',
     Noodles: 'Кесме',
+    'Manti & Noodles': 'Манты жана лагман',
+    'Kazan & Grill': 'Казан жана мангал',
     'Rice & Kazan': 'Күрүч жана казан',
     'From the Grill': 'Мангалдан',
     'Soups & Salads': 'Шорпо жана салаттар',
@@ -111,6 +115,8 @@ export const CONTENT = {
   es: {
     'Dumplings & Pastry': 'Empanadillas y masas',
     Noodles: 'Fideos',
+    'Manti & Noodles': 'Manti y fideos',
+    'Kazan & Grill': 'Kazán y parrilla',
     'Rice & Kazan': 'Arroz y kazán',
     'From the Grill': 'A la parrilla',
     'Soups & Salads': 'Sopas y ensaladas',
